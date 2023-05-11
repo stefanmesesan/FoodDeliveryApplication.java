@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(path = "/controller")
+@RequestMapping(path = "/restaurantController")
 public class RestaurantController {
 
     private final RestaurantService restaurantService;
