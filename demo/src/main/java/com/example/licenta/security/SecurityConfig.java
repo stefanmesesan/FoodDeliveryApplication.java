@@ -33,5 +33,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         } catch (Exception e) {
             throw new ApiException("Security could not be configured", ErrorKeys.SECURITY_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }
+    } //ceva
 }
