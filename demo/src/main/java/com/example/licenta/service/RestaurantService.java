@@ -1,17 +1,15 @@
 package com.example.licenta.service;
 
-import com.example.licenta.model.Restaurant;
+import com.example.licenta.model.dto.RestaurantDTO;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public interface RestaurantService {
-    List<Restaurant> findAll();
-    Restaurant addRestaurant(Restaurant restaurant);
+    List<RestaurantDTO> findAll();
+    RestaurantDTO addRestaurant(RestaurantDTO restaurant);
     void deleteRestaurant(UUID id);
-    Restaurant modifyRestaurantDetails(Restaurant newRestaurant);
-
-    Optional<Restaurant> findById(UUID id);
+    RestaurantDTO modifyRestaurantDetails(RestaurantDTO newRestaurant);
+    RestaurantDTO findById(UUID id);
 
 }

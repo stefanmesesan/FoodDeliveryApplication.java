@@ -1,6 +1,6 @@
 package com.example.licenta.controller;
 
-import com.example.licenta.model.Restaurant;
+import com.example.licenta.model.dto.RestaurantDTO;
 import com.example.licenta.service.RestaurantService;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -26,12 +25,12 @@ public class RestaurantController {
     }
 
     @GetMapping
-    public List<Restaurant> getAllRestaurants() {
+    public List<RestaurantDTO> getAllRestaurants() {
         return restaurantService.findAll();
     }
 
     @GetMapping("/{id}")
-    public Optional<Restaurant> getRestaurant(@PathVariable UUID id) {
+    public RestaurantDTO getRestaurant(@PathVariable UUID id) {
         return restaurantService.findById(id);
     }
 
@@ -41,12 +40,12 @@ public class RestaurantController {
     }
 
     @PostMapping
-    public Restaurant addRestaurant(@RequestBody Restaurant restaurant) {
-        return restaurantService.addRestaurant(restaurant);
+    public RestaurantDTO addRestaurant(@RequestBody RestaurantDTO restaurantDTO) {
+        return restaurantService.addRestaurant(restaurantDTO);
     }
 
     @PutMapping
-    public Restaurant modifyRestaurant(@RequestBody Restaurant restaurant) {
-        return restaurantService.modifyRestaurantDetails(restaurant);
+    public RestaurantDTO modifyRestaurant(@RequestBody RestaurantDTO restaurantDTO) {
+        return restaurantService.modifyRestaurantDetails(restaurantDTO);
     }
 }

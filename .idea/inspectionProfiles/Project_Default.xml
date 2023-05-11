@@ -1,6 +1,23 @@
 <component name="InspectionProjectProfileManager">
   <profile version="1.0">
     <option name="myName" value="Project Default" />
+    <inspection_tool class="MavenPackageUpdate" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+      <option name="excludeList">
+        <list>
+          <option value="org.mockito:mockito-junit-jupiter" />
+          <option value="org.junit.jupiter:junit-jupiter-params" />
+          <option value="com.google.apis:google-api-services-plus" />
+          <option value="org.mockito:mockito-inline" />
+          <option value="com.google.auth:google-auth-library-oauth2-http" />
+          <option value="org.jetbrains:annotations" />
+          <option value="org.junit.jupiter:junit-jupiter-engine" />
+          <option value="org.junit.jupiter:junit-jupiter-api" />
+          <option value="org.mockito:mockito-core" />
+          <option value="org.projectlombok:lombok" />
+          <option value="org.springdoc:springdoc-openapi-ui" />
+        </list>
+      </option>
+    </inspection_tool>
     <inspection_tool class="VulnerableLibrariesLocal" enabled="false" level="WARNING" enabled_by_default="false" />
   </profile>
 </component>
