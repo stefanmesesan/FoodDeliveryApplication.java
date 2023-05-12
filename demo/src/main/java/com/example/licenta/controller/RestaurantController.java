@@ -2,6 +2,7 @@ package com.example.licenta.controller;
 
 import com.example.licenta.model.dto.RestaurantDTO;
 import com.example.licenta.service.RestaurantService;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.UUID;
 
+@CrossOrigin
 @RestController
 @RequestMapping(path = "/restaurantController")
 public class RestaurantController {
