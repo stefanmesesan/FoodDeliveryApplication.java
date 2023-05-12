@@ -44,8 +44,9 @@ public class OrderController {
         return orderService.addOrder(orderDTO);
     }
 
-    @PutMapping
-    public OrderDTO modifyRestaurant(@RequestBody OrderDTO orderDTO) {
-        return orderService.modifyOrderDetails(orderDTO);
+    @PutMapping("/{id}")
+    public OrderDTO modifyRestaurantDetails(@PathVariable(value = "id") UUID id,
+                                            @RequestBody OrderDTO orderDTO) {
+        return orderService.modifyOrderDetails(id, orderDTO);
     }
 }

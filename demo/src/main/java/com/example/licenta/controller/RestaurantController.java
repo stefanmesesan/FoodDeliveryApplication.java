@@ -44,8 +44,9 @@ public class RestaurantController {
         return restaurantService.addRestaurant(restaurantDTO);
     }
 
-    @PutMapping
-    public RestaurantDTO modifyRestaurant(@RequestBody RestaurantDTO restaurantDTO) {
-        return restaurantService.modifyRestaurantDetails(restaurantDTO);
+    @PutMapping("/{id}")
+    public RestaurantDTO modifyRestaurant(@PathVariable(value = "id") UUID id,
+                                          @RequestBody RestaurantDTO restaurantDTO) {
+        return restaurantService.modifyRestaurantDetails(id, restaurantDTO);
     }
 }

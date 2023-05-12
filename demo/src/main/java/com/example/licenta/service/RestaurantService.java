@@ -7,9 +7,9 @@ import java.util.UUID;
 
 public interface RestaurantService {
     List<RestaurantDTO> findAll();
-    RestaurantDTO addRestaurant(RestaurantDTO restaurant);
+    RestaurantDTO addRestaurant(RestaurantDTO restaurantDTO);
     void deleteRestaurant(UUID id);
-    RestaurantDTO modifyRestaurantDetails(RestaurantDTO newRestaurant);
+    RestaurantDTO modifyRestaurantDetails(UUID id, RestaurantDTO newRestaurantDTO);
     RestaurantDTO findById(UUID id);
 
 }

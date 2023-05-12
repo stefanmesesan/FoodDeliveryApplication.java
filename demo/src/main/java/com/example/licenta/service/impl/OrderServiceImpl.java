@@ -40,8 +40,8 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.deleteById(id);
     }
 
-    public OrderDTO modifyOrderDetails(OrderDTO newOrder) {
-        Order order = orderRepository.findById(newOrder.getId()).orElseThrow();
+    public OrderDTO modifyOrderDetails(UUID id, OrderDTO newOrder) {
+        Order order = orderRepository.findById(id).orElseThrow();
 
         order.setRestaurant(newOrder.getRestaurant());
         order.setOrderStatus(newOrder.getOrderStatus());

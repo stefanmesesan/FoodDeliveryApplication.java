@@ -13,7 +13,7 @@ public interface OrderService {
 
     void deleteOrder(UUID id);
 
-    OrderDTO modifyOrderDetails(OrderDTO orderDTO);
+    OrderDTO modifyOrderDetails(UUID id, OrderDTO orderDTO);
 
     OrderDTO findById(UUID id);
 }

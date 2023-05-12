@@ -48,11 +48,11 @@ public class MenuItemDTO {
         this.price = price;
     }
 
-    public UUID getRestaurant_id() {
-        return restaurant.getId();
+    public Restaurant getRestaurant() {
+        return restaurant;
     }
 
-    public void setRestaurant_id(Restaurant restaurant) {
+    public void setRestaurant(Restaurant restaurant) {
         this.restaurant = restaurant;
     }
 

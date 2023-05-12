@@ -5,12 +5,12 @@ import com.example.licenta.model.dto.RestaurantDTO;
 
 public class RestaurantConverter {
 
-    public static RestaurantDTO toRestaurantDTO(Restaurant resturant){
+    public static RestaurantDTO toRestaurantDTO(Restaurant restaurant){
         final RestaurantDTO restaurantDTO = new RestaurantDTO();
-        restaurantDTO.setAddress(resturant.getAddress());
-        restaurantDTO.setName(resturant.getName());
-        restaurantDTO.setId(resturant.getId());
-        restaurantDTO.setPhoneNumber(restaurantDTO.getPhoneNumber());
+        restaurantDTO.setAddress(restaurant.getAddress());
+        restaurantDTO.setName(restaurant.getName());
+        restaurantDTO.setId(restaurant.getId());
+        restaurantDTO.setPhoneNumber(restaurant.getPhoneNumber());
 
         return restaurantDTO;
     }

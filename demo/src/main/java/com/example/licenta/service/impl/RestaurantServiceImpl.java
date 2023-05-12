@@ -15,11 +15,11 @@ import java.util.UUID;
 import static com.example.licenta.exception.ErrorKeys.NOT_FOUND;
 
 @Service
-public class RestaurantServiceImplementation implements RestaurantService {
+public class RestaurantServiceImpl implements RestaurantService {
 
     private final RestaurantRepository restaurantRepository;
 
-    public RestaurantServiceImplementation(RestaurantRepository restaurantRepository) {
+    public RestaurantServiceImpl(RestaurantRepository restaurantRepository) {
         this.restaurantRepository = restaurantRepository;
     }
 
@@ -41,12 +41,12 @@ public class RestaurantServiceImplementation implements RestaurantService {
         restaurantRepository.deleteById(id);
     }
 
-    public RestaurantDTO modifyRestaurantDetails(RestaurantDTO newRestaurant) {
-        Restaurant restaurant = restaurantRepository.findById(newRestaurant.getId()).orElseThrow();
+    public RestaurantDTO modifyRestaurantDetails(UUID id, RestaurantDTO newRestaurantDTO) {
+        Restaurant restaurant = restaurantRepository.findById(id).orElseThrow();
 
-        restaurant.setName(newRestaurant.getName());
-        restaurant.setAddress(newRestaurant.getAddress());
-        restaurant.setPhoneNumber(newRestaurant.getPhoneNumber());
+        restaurant.setName(newRestaurantDTO.getName());
+        restaurant.setAddress(newRestaurantDTO.getAddress());
+        restaurant.setPhoneNumber(newRestaurantDTO.getPhoneNumber());
 
         return RestaurantConverter.toRestaurantDTO(restaurantRepository.save(restaurant));
     }
