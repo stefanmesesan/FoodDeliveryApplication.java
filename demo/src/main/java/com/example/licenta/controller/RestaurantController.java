@@ -17,7 +17,7 @@ import java.util.UUID;
 
 @CrossOrigin
 @RestController
-@RequestMapping(path = "/restaurantController")
+@RequestMapping("/api/v1/restaurantController")
 public class RestaurantController {
 
     private final RestaurantService restaurantService;
