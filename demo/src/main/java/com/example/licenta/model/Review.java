@@ -15,7 +15,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "reviews")
-public class Reviews {
+public class Review {
 
     @Id
     @GeneratedValue(generator = "uuid")
@@ -90,7 +90,7 @@ public class Reviews {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Reviews reviews = (Reviews) o;
+        Review reviews = (Review) o;
         return Objects.equals(id, reviews.id) && Objects.equals(user, reviews.user) && Objects.equals(restaurantId, reviews.restaurantId) && Objects.equals(rating, reviews.rating) && Objects.equals(comment, reviews.comment) && Objects.equals(createdAt, reviews.createdAt);
     }
 

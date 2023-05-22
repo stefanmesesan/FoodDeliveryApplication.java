@@ -13,6 +13,8 @@ public class RestaurantDTO {
 
     private String phoneNumber;
 
+    private Double rating;
+
     public UUID getId() {
         return id;
     }
@@ -45,16 +47,24 @@ public class RestaurantDTO {
         this.phoneNumber = phoneNumber;
     }
 
+    public Double getRating() {
+        return rating;
+    }
+
+    public void setRating(Double rating) {
+        this.rating = rating;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RestaurantDTO that = (RestaurantDTO) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(address, that.address) && Objects.equals(phoneNumber, that.phoneNumber);
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(address, that.address) && Objects.equals(phoneNumber, that.phoneNumber) && Objects.equals(rating, that.rating);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, address, phoneNumber);
+        return Objects.hash(id, name, address, phoneNumber, rating);
     }
 }
