@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -27,8 +28,8 @@ public class RestaurantController {
     }
 
     @GetMapping
-    public List<RestaurantDTO> getAllRestaurants() {
-        return restaurantService.findAll();
+    public List<RestaurantDTO> getAllRestaurants(@RequestParam(value = "rating", required = false) Double rating) {
+        return restaurantService.findAll(rating);
     }
 
     @GetMapping("/{id}")

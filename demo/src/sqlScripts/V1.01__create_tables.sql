@@ -1,6 +1,6 @@
 CREATE TABLE users (id UUID PRIMARY KEY, firstName TEXT, lastName TEXT, email TEXT, phoneNumber TEXT, address TEXT, role VARCHAR, password VARCHAR);
 
-CREATE TABLE restaurants (id UUID PRIMARY KEY, name TEXT, address TEXT, phoneNumber TEXT);
+CREATE TABLE restaurants (id UUID PRIMARY KEY, name TEXT, address TEXT, phoneNumber TEXT, rating FLOAT);
 
 CREATE TABLE menu_items (id UUID PRIMARY KEY, name TEXT, description TEXT, price FLOAT, spicy BOOLEAN, vegan BOOLEAN, vegetarian BOOLEAN, restaurant_id UUID REFERENCES restaurants(id));
 
