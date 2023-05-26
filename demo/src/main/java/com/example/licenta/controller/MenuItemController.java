@@ -24,12 +24,12 @@ public class MenuItemController {
         this.menuItemService = menuItemService;
     }
 
-    @GetMapping
-    public List<MenuItemDTO> getAllMenuItems() {
-        return menuItemService.findAll();
+    @GetMapping("/{restaurantId}")
+    public List<MenuItemDTO> getAllMenuItems(@PathVariable UUID restaurantId) {
+        return menuItemService.findAllByRestaurantId(restaurantId);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id}/ceva")
     public MenuItemDTO getMenuItem(@PathVariable UUID id) {
         return menuItemService.findById(id);
     }

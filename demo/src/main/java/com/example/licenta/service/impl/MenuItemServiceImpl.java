@@ -22,8 +22,8 @@ public class MenuItemServiceImpl implements MenuItemService {
         this.menuItemRepository = menuItemRepository;
     }
 
-    public List<MenuItemDTO> findAll() {
-        return menuItemRepository.findAll().stream().map(MenuItemConverter::toMenuItemDTO).toList();
+    public List<MenuItemDTO> findAllByRestaurantId(UUID id) {
+        return menuItemRepository.findAllByRestaurantId(id).stream().map(MenuItemConverter::toMenuItemDTO).toList();
     }
 
     public MenuItemDTO findById(UUID id) {
@@ -47,7 +47,6 @@ public class MenuItemServiceImpl implements MenuItemService {
         menuItem.setName(menuItemDTO.getName());
         menuItem.setDescription(menuItemDTO.getDescription());
         menuItem.setPrice(menuItemDTO.getPrice());
-        menuItem.setRestaurant(menuItemDTO.getRestaurant());
 
         return MenuItemConverter.toMenuItemDTO(menuItemRepository.save(menuItem));
     }

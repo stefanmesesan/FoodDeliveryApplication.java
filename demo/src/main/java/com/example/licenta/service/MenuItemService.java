@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public interface MenuItemService {
 
-    List<MenuItemDTO> findAll();
+    List<MenuItemDTO> findAllByRestaurantId(UUID id);
     MenuItemDTO addMenuItem(MenuItemDTO menuItemDTO);
     void deleteMenuItem(UUID id);
     MenuItemDTO modifyMenuItem(UUID id, MenuItemDTO menuItemDTO);

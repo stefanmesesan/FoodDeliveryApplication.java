@@ -1,7 +1,5 @@
 package com.example.licenta.model.dto;
 
-import com.example.licenta.model.Restaurant;
-
 import java.util.Objects;
 import java.util.UUID;
 
@@ -14,7 +12,6 @@ public class MenuItemDTO {
 
     private Float price;
 
-    private Restaurant restaurant;
 
     public UUID getId() {
         return id;
@@ -48,24 +45,17 @@ public class MenuItemDTO {
         this.price = price;
     }
 
-    public Restaurant getRestaurant() {
-        return restaurant;
-    }
-
-    public void setRestaurant(Restaurant restaurant) {
-        this.restaurant = restaurant;
-    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MenuItemDTO that = (MenuItemDTO) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(price, that.price) && Objects.equals(restaurant, that.restaurant);
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(price, that.price);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, price, restaurant);
+        return Objects.hash(id, name, description, price);
     }
 }
