@@ -79,7 +79,7 @@ public class AuthenticationServiceImpl {
     }
 
     private void deleteAllInvalidTokens(User user) {
-        var validUserTokens = tokenRepository.findAllByUser(user.getId());
+        var validUserTokens = tokenRepository.findAllByUserId(user.getId());
         if (validUserTokens.isEmpty())
             return;
         tokenRepository.deleteAll(validUserTokens);
