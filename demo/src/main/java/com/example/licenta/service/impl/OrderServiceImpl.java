@@ -2,6 +2,8 @@ package com.example.licenta.service.impl;
 
 import com.example.licenta.exception.ApiException;
 import com.example.licenta.model.Order;
+import com.example.licenta.model.OrderStatus;
+import com.example.licenta.model.UserRole;
 import com.example.licenta.model.dto.OrderDTO;
 import com.example.licenta.repository.OrderRepository;
 import com.example.licenta.service.OrderService;
@@ -12,7 +14,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.UUID;
 
-import static com.example.licenta.exception.ErrorKeys.NOT_FOUND;
+import static com.example.licenta.exception.ErrorKeys.*;
+import static com.example.licenta.model.OrderStatus.*;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -36,8 +39,17 @@ public class OrderServiceImpl implements OrderService {
         return OrderConverter.toOrderDTO(orderRepository.save(order));
     }
 
-    public void deleteOrder(UUID id) {
-        orderRepository.deleteById(id);
+    public OrderDTO changeOrderStatus(UUID id, UserRole userRole) {
+        Order order = orderRepository.findById(id).orElseThrow();
+        if (order.getOrderStatus() != ORDER_CANCELED && order.getOrderStatus() != ORDER_REJECTED)
+            if (userRole == UserRole.DELIVERY_GUY) {
+                order.setOrderStatus(ON_ITS_WAY);
+                return OrderConverter.toOrderDTO(orderRepository.save(order));
+            } else if (userRole == UserRole.RESTAURANT_OPERATOR) {
+                order.setOrderStatus(ORDER_RECEIVED);
+            } else if (userRole == UserRole.ADMIN)
+                order.setOrderStatus(ORDER_REJECTED);
+        throw new ApiException("Not enough authorities", UNAUTHORIZED, HttpStatus.UNAUTHORIZED);
     }
 
     public OrderDTO modifyOrderDetails(UUID id, OrderDTO newOrder) {
@@ -48,5 +60,13 @@ public class OrderServiceImpl implements OrderService {
         order.setTotalPrice(newOrder.getTotalPrice());
 
         return OrderConverter.toOrderDTO(orderRepository.save(order));
+    }
+
+    public void deleteOrder(UUID id) {
+        Order order = orderRepository.findById(id).orElseThrow();
+        if (!order.getOrderStatus().equals(OrderStatus.ORDER_CANCELED))
+            throw new ApiException("Invalid Order Status", INVALID_STATUS, HttpStatus.BAD_REQUEST);
+
+        orderRepository.deleteById(id);
     }
 }

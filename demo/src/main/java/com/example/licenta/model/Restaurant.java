@@ -31,6 +31,9 @@ public class Restaurant {
     @Column(name = "rating")
     private double rating;
 
+    @Column(name = "status")
+    private Status status;
+
     public UUID getId() {
         return id;
     }
@@ -71,16 +74,24 @@ public class Restaurant {
         this.rating = rating;
     }
 
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status restaurantStatus) {
+        this.status = restaurantStatus;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Restaurant that = (Restaurant) o;
-        return rating == that.rating && Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(address, that.address) && Objects.equals(phoneNumber, that.phoneNumber);
+        return Double.compare(that.rating, rating) == 0 && Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(address, that.address) && Objects.equals(phoneNumber, that.phoneNumber) && status == that.status;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, address, phoneNumber, rating);
+        return Objects.hash(id, name, address, phoneNumber, rating, status);
     }
 }

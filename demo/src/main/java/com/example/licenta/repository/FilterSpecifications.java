@@ -12,4 +12,8 @@ public class FilterSpecifications {
     public static Specification<Restaurant> byRating(Double rating) {
         return (root, query, criteriaBuilder) -> criteriaBuilder.between(root.get("rating"), rating.intValue(), rating.intValue()+1);
     }
+
+    public static Specification<Restaurant> byApproved() {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("approved"), true);
+    }
 }

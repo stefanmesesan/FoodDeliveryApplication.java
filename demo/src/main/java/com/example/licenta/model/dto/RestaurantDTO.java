@@ -1,5 +1,7 @@
 package com.example.licenta.model.dto;
 
+import com.example.licenta.model.Status;
+
 import java.util.Objects;
 import java.util.UUID;
 
@@ -13,7 +15,9 @@ public class RestaurantDTO {
 
     private String phoneNumber;
 
-    private Double rating;
+    private double rating;
+
+    private Status restaurantStatus;
 
     public UUID getId() {
         return id;
@@ -47,12 +51,20 @@ public class RestaurantDTO {
         this.phoneNumber = phoneNumber;
     }
 
-    public Double getRating() {
+    public double getRating() {
         return rating;
     }
 
-    public void setRating(Double rating) {
+    public void setRating(double rating) {
         this.rating = rating;
+    }
+
+    public Status getRestaurantStatus() {
+        return restaurantStatus;
+    }
+
+    public void setRestaurantStatus(Status restaurantStatus) {
+        this.restaurantStatus = restaurantStatus;
     }
 
     @Override
@@ -60,11 +72,11 @@ public class RestaurantDTO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RestaurantDTO that = (RestaurantDTO) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(address, that.address) && Objects.equals(phoneNumber, that.phoneNumber) && Objects.equals(rating, that.rating);
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(address, that.address) && Objects.equals(phoneNumber, that.phoneNumber) && Objects.equals(rating, that.rating) && restaurantStatus == that.restaurantStatus;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, address, phoneNumber, rating);
+        return Objects.hash(id, name, address, phoneNumber, rating, restaurantStatus);
     }
 }

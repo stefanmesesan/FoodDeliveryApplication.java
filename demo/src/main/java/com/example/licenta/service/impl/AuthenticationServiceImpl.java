@@ -36,17 +36,20 @@ public class AuthenticationServiceImpl {
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .email(request.getEmail())
+                .address(request.getAddress())
+                .phoneNumber(request.getPhoneNumber())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(request.getRole())
                 .build();
 
-
         var savedUser = userRepository.save(user);
-        var jwtToken = jwtService.generateToken(user);
+        var access_token = jwtService.generateToken(user);
 
-        saveUserToken(savedUser, jwtToken);
+        saveUserToken(savedUser, access_token);
+
         return AuthenticationResponse.builder()
-                .token(jwtToken)
+                .access_token(access_token)
+                .role(user.getRole())
                 .build();
     }
 
@@ -59,11 +62,14 @@ public class AuthenticationServiceImpl {
         );
         var user = userRepository.findUserByEmail(request.getEmail())
                 .orElseThrow();
-        var jwtToken = jwtService.generateToken(user);
+        var access_token = jwtService.generateToken(user);
+
         deleteAllInvalidTokens(user);
-        saveUserToken(user, jwtToken);
+        saveUserToken(user, access_token);
+
         return AuthenticationResponse.builder()
-                .token(jwtToken)
+                .access_token(access_token)
+                .role(user.getRole())
                 .build();
     }
 

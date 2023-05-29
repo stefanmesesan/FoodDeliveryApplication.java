@@ -38,6 +38,9 @@ public class Review {
     @Column(name = "created_at")
     private LocalDate createdAt;
 
+    @Column(name = "status")
+    private Status status;
+
     public UUID getId() {
         return id;
     }
@@ -86,16 +89,24 @@ public class Review {
         this.createdAt = LocalDate.now();
     }
 
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Review reviews = (Review) o;
-        return Objects.equals(id, reviews.id) && Objects.equals(user, reviews.user) && Objects.equals(restaurantId, reviews.restaurantId) && Objects.equals(rating, reviews.rating) && Objects.equals(comment, reviews.comment) && Objects.equals(createdAt, reviews.createdAt);
+        Review review = (Review) o;
+        return Objects.equals(id, review.id) && Objects.equals(user, review.user) && Objects.equals(restaurantId, review.restaurantId) && Objects.equals(rating, review.rating) && Objects.equals(comment, review.comment) && Objects.equals(createdAt, review.createdAt) && status == review.status;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, user, restaurantId, rating, comment, createdAt);
+        return Objects.hash(id, user, restaurantId, rating, comment, createdAt, status);
     }
 }

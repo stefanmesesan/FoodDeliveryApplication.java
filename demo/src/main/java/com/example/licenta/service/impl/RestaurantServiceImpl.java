@@ -2,6 +2,7 @@ package com.example.licenta.service.impl;
 
 import com.example.licenta.exception.ApiException;
 import com.example.licenta.model.Restaurant;
+import com.example.licenta.model.Status;
 import com.example.licenta.model.dto.RestaurantDTO;
 import com.example.licenta.repository.RestaurantRepository;
 import com.example.licenta.service.RestaurantService;
@@ -14,6 +15,8 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.example.licenta.exception.ErrorKeys.NOT_FOUND;
+import static com.example.licenta.model.Status.*;
+import static com.example.licenta.repository.FilterSpecifications.byApproved;
 import static com.example.licenta.repository.FilterSpecifications.byRating;
 
 @Service
@@ -25,9 +28,13 @@ public class RestaurantServiceImpl implements RestaurantService {
         this.restaurantRepository = restaurantRepository;
     }
 
-    public List<RestaurantDTO> findAll(Double rating) {
+    public List<RestaurantDTO> findAllBySpecifications(double rating) {
         Specification<Restaurant> specification = getRestaurantSpecification(rating);
         return restaurantRepository.findAll(specification).stream().map(RestaurantConverter::toRestaurantDTO).toList();
+    }
+
+    public List<RestaurantDTO> findAll() {
+        return restaurantRepository.findAll().stream().map(RestaurantConverter::toRestaurantDTO).toList();
     }
 
     public RestaurantDTO findById(UUID id) {
@@ -38,6 +45,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     public RestaurantDTO addRestaurant(RestaurantDTO restaurantDTO) {
         Restaurant restaurant = RestaurantConverter.toRestaurant(restaurantDTO);
         restaurant.setRating(0);
+        restaurant.setStatus(NEW);
         return RestaurantConverter.toRestaurantDTO(restaurantRepository.save(restaurant));
     }
 
@@ -55,13 +63,26 @@ public class RestaurantServiceImpl implements RestaurantService {
         return RestaurantConverter.toRestaurantDTO(restaurantRepository.save(restaurant));
     }
 
+    public RestaurantDTO changeRestaurantStatus(Status restaurantStatus, UUID id) {
+        Restaurant restaurant = restaurantRepository.findById(id).orElseThrow();
+
+        if (restaurantStatus.equals(APPROVED))
+            restaurant.setStatus(APPROVED);
+        else if (restaurantStatus.equals(REJECTED))
+            restaurant.setStatus(REJECTED);
+
+        return RestaurantConverter.toRestaurantDTO(restaurantRepository.save(restaurant));
+    }
+
     private Specification<Restaurant> getRestaurantSpecification(Double rating) {
         Specification<Restaurant> specification = Specification.where(null);
+
+        specification = byApproved().and(specification);
 
         if (rating != null) {
             specification = byRating(rating).and(specification);
             return specification;
         }
-        return null;
+        return specification;
     }
 }
