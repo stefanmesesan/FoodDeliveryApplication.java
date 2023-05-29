@@ -29,10 +29,10 @@ public class Restaurant {
     private String phoneNumber;
 
     @Column(name = "rating")
-    private double rating;
+    private Double rating;
 
     @Column(name = "status")
-    private Status status;
+    private Status restaurantStatus;
 
     public UUID getId() {
         return id;
@@ -66,20 +66,20 @@ public class Restaurant {
         this.phoneNumber = phoneNumber;
     }
 
-    public double getRating() {
+    public Double getRating() {
         return rating;
     }
 
-    public void setRating(double rating) {
+    public void setRating(Double rating) {
         this.rating = rating;
     }
 
-    public Status getStatus() {
-        return status;
+    public Status getRestaurantStatus() {
+        return restaurantStatus;
     }
 
-    public void setStatus(Status restaurantStatus) {
-        this.status = restaurantStatus;
+    public void setRestaurantStatus(Status restaurantStatus) {
+        this.restaurantStatus = restaurantStatus;
     }
 
     @Override
@@ -87,11 +87,11 @@ public class Restaurant {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Restaurant that = (Restaurant) o;
-        return Double.compare(that.rating, rating) == 0 && Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(address, that.address) && Objects.equals(phoneNumber, that.phoneNumber) && status == that.status;
+        return Double.compare(that.rating, rating) == 0 && Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(address, that.address) && Objects.equals(phoneNumber, that.phoneNumber) && restaurantStatus == that.restaurantStatus;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, address, phoneNumber, rating, status);
+        return Objects.hash(id, name, address, phoneNumber, rating, restaurantStatus);
     }
 }

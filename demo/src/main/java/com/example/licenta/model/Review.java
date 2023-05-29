@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -26,8 +27,9 @@ public class Review {
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private User user;
 
-    @Column(name = "restaurant_id")
-    private UUID restaurantId;
+    @OneToOne
+    @JoinColumn(name = "restaurant_id", referencedColumnName = "id", nullable = false)
+    private Restaurant restaurant;
 
     @Column(name = "rating")
     private Double rating;
@@ -57,12 +59,12 @@ public class Review {
         this.user = user;
     }
 
-    public UUID getRestaurantId() {
-        return restaurantId;
+    public Restaurant getRestaurant() {
+        return restaurant;
     }
 
-    public void setRestaurantId(UUID restaurantId) {
-        this.restaurantId = restaurantId;
+    public void setRestaurant(Restaurant restaurant) {
+        this.restaurant = restaurant;
     }
 
     public Double getRating() {
@@ -102,11 +104,11 @@ public class Review {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Review review = (Review) o;
-        return Objects.equals(id, review.id) && Objects.equals(user, review.user) && Objects.equals(restaurantId, review.restaurantId) && Objects.equals(rating, review.rating) && Objects.equals(comment, review.comment) && Objects.equals(createdAt, review.createdAt) && status == review.status;
+        return Objects.equals(id, review.id) && Objects.equals(user, review.user) && Objects.equals(restaurant, review.restaurant) && Objects.equals(rating, review.rating) && Objects.equals(comment, review.comment) && Objects.equals(createdAt, review.createdAt) && status == review.status;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, user, restaurantId, rating, comment, createdAt, status);
+        return Objects.hash(id, user, restaurant, rating, comment, createdAt, status);
     }
 }

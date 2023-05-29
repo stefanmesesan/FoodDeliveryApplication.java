@@ -8,6 +8,6 @@ CREATE TABLE orders (id UUID PRIMARY KEY, user_id UUID REFERENCES users(id), res
 
 CREATE TABLE order_items (id UUID PRIMARY KEY, order_id UUID REFERENCES orders(id), menu_item_id UUID REFERENCES menu_items(id), quantity INT);
 
-CREATE TABLE reviews (id UUID PRIMARY KEY, user_id UUID REFERENCES users(id), restaurant_id UUID REFERENCES restaurants(id), rating FLOAT, comment TEXT, created_at TEXT, status TEXT);
+CREATE TABLE reviews (id UUID PRIMARY KEY, user_id UUID REFERENCES users(id), restaurant_id UUID REFERENCES restaurants(id), rating FLOAT, comment TEXT, created_at TEXT);
 
 CREATE TABLE token (id UUID PRIMARY KEY, token TEXT, token_type TEXT, revoked BOOLEAN, expired BOOLEAN, user_id UUID REFERENCES users(id) );

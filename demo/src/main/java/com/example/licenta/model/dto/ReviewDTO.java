@@ -1,18 +1,15 @@
 package com.example.licenta.model.dto;
 
+import com.example.licenta.model.Restaurant;
 import com.example.licenta.model.User;
 
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
 
-public class ReviewsDTO {
+public class ReviewDTO {
 
     private UUID id;
-
-    private User user;
-
-    private UUID restaurantId;
 
     private Double rating;
 
@@ -26,22 +23,6 @@ public class ReviewsDTO {
 
     public void setId(UUID id) {
         this.id = id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public UUID getRestaurantId() {
-        return restaurantId;
-    }
-
-    public void setRestaurantId(UUID restaurantId) {
-        this.restaurantId = restaurantId;
     }
 
     public Double getRating() {
@@ -72,12 +53,12 @@ public class ReviewsDTO {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ReviewsDTO that = (ReviewsDTO) o;
-        return Objects.equals(id, that.id) && Objects.equals(user, that.user) && Objects.equals(restaurantId, that.restaurantId) && Objects.equals(rating, that.rating) && Objects.equals(comment, that.comment) && Objects.equals(createdAt, that.createdAt);
+        ReviewDTO reviewDTO = (ReviewDTO) o;
+        return Objects.equals(id, reviewDTO.id) && Objects.equals(rating, reviewDTO.rating) && Objects.equals(comment, reviewDTO.comment) && Objects.equals(createdAt, reviewDTO.createdAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, user, restaurantId, rating, comment, createdAt);
+        return Objects.hash(id, rating, comment, createdAt);
     }
 }

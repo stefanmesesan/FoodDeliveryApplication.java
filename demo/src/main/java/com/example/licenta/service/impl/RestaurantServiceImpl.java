@@ -16,7 +16,6 @@ import java.util.UUID;
 
 import static com.example.licenta.exception.ErrorKeys.NOT_FOUND;
 import static com.example.licenta.model.Status.*;
-import static com.example.licenta.repository.FilterSpecifications.byApproved;
 import static com.example.licenta.repository.FilterSpecifications.byRating;
 
 @Service
@@ -28,7 +27,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         this.restaurantRepository = restaurantRepository;
     }
 
-    public List<RestaurantDTO> findAllBySpecifications(double rating) {
+    public List<RestaurantDTO> findAllBySpecifications(Double rating) {
         Specification<Restaurant> specification = getRestaurantSpecification(rating);
         return restaurantRepository.findAll(specification).stream().map(RestaurantConverter::toRestaurantDTO).toList();
     }
@@ -44,8 +43,8 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     public RestaurantDTO addRestaurant(RestaurantDTO restaurantDTO) {
         Restaurant restaurant = RestaurantConverter.toRestaurant(restaurantDTO);
-        restaurant.setRating(0);
-        restaurant.setStatus(NEW);
+        restaurant.setRating(0.0);
+        restaurant.setRestaurantStatus(NEW);
         return RestaurantConverter.toRestaurantDTO(restaurantRepository.save(restaurant));
     }
 
@@ -54,7 +53,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     public RestaurantDTO modifyRestaurantDetails(UUID id, RestaurantDTO newRestaurantDTO) {
-        Restaurant restaurant = restaurantRepository.findById(id).orElseThrow();
+        Restaurant restaurant = restaurantRepository.findById(id).orElseThrow(() -> new ApiException("Restaurant not found", NOT_FOUND, HttpStatus.NOT_FOUND));
 
         restaurant.setName(newRestaurantDTO.getName());
         restaurant.setAddress(newRestaurantDTO.getAddress());
@@ -64,12 +63,12 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     public RestaurantDTO changeRestaurantStatus(Status restaurantStatus, UUID id) {
-        Restaurant restaurant = restaurantRepository.findById(id).orElseThrow();
+        Restaurant restaurant = restaurantRepository.findById(id).orElseThrow(() -> new ApiException("Restaurant not found", NOT_FOUND, HttpStatus.NOT_FOUND));
 
         if (restaurantStatus.equals(APPROVED))
-            restaurant.setStatus(APPROVED);
+            restaurant.setRestaurantStatus(APPROVED);
         else if (restaurantStatus.equals(REJECTED))
-            restaurant.setStatus(REJECTED);
+            restaurant.setRestaurantStatus(REJECTED);
 
         return RestaurantConverter.toRestaurantDTO(restaurantRepository.save(restaurant));
     }
@@ -77,12 +76,9 @@ public class RestaurantServiceImpl implements RestaurantService {
     private Specification<Restaurant> getRestaurantSpecification(Double rating) {
         Specification<Restaurant> specification = Specification.where(null);
 
-        specification = byApproved().and(specification);
-
-        if (rating != null) {
+        if (rating != null)
             specification = byRating(rating).and(specification);
-            return specification;
-        }
+
         return specification;
     }
 }
