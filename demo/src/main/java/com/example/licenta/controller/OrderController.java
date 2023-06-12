@@ -2,7 +2,10 @@ package com.example.licenta.controller;
 
 import com.example.licenta.model.UserRole;
 import com.example.licenta.model.dto.OrderDTO;
+import com.example.licenta.model.dto.UserDTO;
 import com.example.licenta.service.OrderService;
+import com.example.licenta.service.RestaurantService;
+import com.example.licenta.service.UserService;
 import com.example.licenta.utils.UserRoleMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.GrantedAuthority;
@@ -25,9 +28,13 @@ import java.util.UUID;
 public class OrderController {
 
     private final OrderService orderService;
+    private final RestaurantService restaurantService;
+    private final UserService userService;
 
-    public OrderController(OrderService orderService) {
+    public OrderController(OrderService orderService, RestaurantService restaurantService, UserService userService) {
         this.orderService = orderService;
+        this.restaurantService = restaurantService;
+        this.userService = userService;
     }
 
     @GetMapping
@@ -35,13 +42,21 @@ public class OrderController {
         return orderService.findAll();
     }
 
+    @GetMapping("/myOrders")
+    public List<OrderDTO> getMyOrders() {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getCredentials().toString();
+        UserDTO userDTO = userService.findByUserEmail(userEmail);
+
+        return restaurantService.findMyRestaurantsOrders(userDTO.getId());
+    }
+
     @GetMapping("/{id}")
-    public OrderDTO getOrder(@PathVariable UUID id) {
+    public OrderDTO getOrder(@PathVariable(value = "id") UUID id) {
         return orderService.findById(id);
     }
 
     @PutMapping("/{id}")
-    public OrderDTO changeOrderStatus(@PathVariable UUID id) {
+    public OrderDTO changeOrderStatus(@PathVariable(value = "id") UUID id) {
         Collection<? extends GrantedAuthority> userRole = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
         UserRole userRoleMapped = UserRoleMapper.convert(userRole);
 
@@ -57,11 +72,5 @@ public class OrderController {
     public OrderDTO modifyOrderDetails(@PathVariable(value = "id") UUID id,
                                        @RequestBody OrderDTO orderDTO) {
         return orderService.modifyOrderDetails(id, orderDTO);
-    }
-
-    @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public void deleteOrder(@PathVariable UUID id) {
-        orderService.deleteOrder(id);
     }
 }

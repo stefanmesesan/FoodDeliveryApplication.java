@@ -1,6 +1,5 @@
 package com.example.licenta.controller;
 
-import com.example.licenta.model.Status;
 import com.example.licenta.model.UserRole;
 import com.example.licenta.model.dto.RestaurantDTO;
 import com.example.licenta.model.dto.ReviewDTO;
@@ -34,12 +33,6 @@ public class RestaurantController {
         this.reviewService = reviewService;
     }
 
-    @GetMapping("/admin")
-    @Secured(role = {UserRole.ADMIN})
-    public List<RestaurantDTO> getAllRestaurants() {
-        return restaurantService.findAll();
-    }
-
     @GetMapping
     @Secured(role = {UserRole.CUSTOMER})
     public List<RestaurantDTO> getRestaurants(@RequestParam(name = "rating", required = false) Double rating) {
@@ -69,13 +62,6 @@ public class RestaurantController {
     public RestaurantDTO modifyRestaurant(@PathVariable(value = "id") UUID id,
                                           @RequestBody RestaurantDTO restaurantDTO) {
         return restaurantService.modifyRestaurantDetails(id, restaurantDTO);
-    }
-
-    @PutMapping("/status/{id}")
-    @Secured(role = {UserRole.ADMIN})
-    public RestaurantDTO changeRestaurantStatus(@RequestParam(value = "approved", required = false) Status restaurantStatus,
-                                                @PathVariable(value = "id") UUID id) {
-        return restaurantService.changeRestaurantStatus(restaurantStatus, id);
     }
 
     @PutMapping("/rating/{userId}/{restaurantId}")

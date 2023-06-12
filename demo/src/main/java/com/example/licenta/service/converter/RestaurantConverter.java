@@ -12,7 +12,6 @@ public class RestaurantConverter {
         restaurantDTO.setId(restaurant.getId());
         restaurantDTO.setPhoneNumber(restaurant.getPhoneNumber());
         restaurantDTO.setRating(restaurant.getRating());
-        restaurantDTO.setRestaurantStatus(restaurant.getRestaurantStatus());
 
         return restaurantDTO;
     }
@@ -24,7 +23,6 @@ public class RestaurantConverter {
         restaurant.setId(restaurantDTO.getId());
         restaurant.setPhoneNumber(restaurantDTO.getPhoneNumber());
         restaurant.setRating(restaurantDTO.getRating());
-        restaurant.setRestaurantStatus(restaurantDTO.getRestaurantStatus());
 
         return restaurant;
     }

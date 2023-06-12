@@ -1,8 +1,5 @@
 package com.example.licenta.model.dto;
 
-import com.example.licenta.model.Restaurant;
-import com.example.licenta.model.User;
-
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;

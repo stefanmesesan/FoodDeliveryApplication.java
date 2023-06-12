@@ -4,6 +4,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -31,8 +33,9 @@ public class Restaurant {
     @Column(name = "rating")
     private Double rating;
 
-    @Column(name = "status")
-    private Status restaurantStatus;
+    @OneToOne
+    @JoinColumn(name = "id", referencedColumnName = "id", nullable = false)
+    private User addedBy;
 
     public UUID getId() {
         return id;
@@ -74,12 +77,12 @@ public class Restaurant {
         this.rating = rating;
     }
 
-    public Status getRestaurantStatus() {
-        return restaurantStatus;
+    public User getAddedBy() {
+        return addedBy;
     }
 
-    public void setRestaurantStatus(Status restaurantStatus) {
-        this.restaurantStatus = restaurantStatus;
+    public void setAddedBy(User addedBy) {
+        this.addedBy = addedBy;
     }
 
     @Override
@@ -87,11 +90,11 @@ public class Restaurant {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Restaurant that = (Restaurant) o;
-        return Double.compare(that.rating, rating) == 0 && Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(address, that.address) && Objects.equals(phoneNumber, that.phoneNumber) && restaurantStatus == that.restaurantStatus;
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(address, that.address) && Objects.equals(phoneNumber, that.phoneNumber) && Objects.equals(rating, that.rating) && Objects.equals(addedBy, that.addedBy);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, address, phoneNumber, rating, restaurantStatus);
+        return Objects.hash(id, name, address, phoneNumber, rating, addedBy);
     }
 }

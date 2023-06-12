@@ -36,19 +36,21 @@ public class OrderServiceImpl implements OrderService {
 
     public OrderDTO addOrder(OrderDTO orderDTO) {
         Order order = OrderConverter.toOrder(orderDTO);
+        order.setOrderStatus(NEW);
         return OrderConverter.toOrderDTO(orderRepository.save(order));
     }
 
     public OrderDTO changeOrderStatus(UUID id, UserRole userRole) {
         Order order = orderRepository.findById(id).orElseThrow();
-        if (order.getOrderStatus() != ORDER_CANCELED && order.getOrderStatus() != ORDER_REJECTED)
+        if (userRole == UserRole.CUSTOMER)
+            order.setOrderStatus(ORDER_CANCELED);
+        if (order.getOrderStatus() != ORDER_CANCELED)
             if (userRole == UserRole.DELIVERY_GUY) {
                 order.setOrderStatus(ON_ITS_WAY);
                 return OrderConverter.toOrderDTO(orderRepository.save(order));
             } else if (userRole == UserRole.RESTAURANT_OPERATOR) {
                 order.setOrderStatus(ORDER_RECEIVED);
-            } else if (userRole == UserRole.ADMIN)
-                order.setOrderStatus(ORDER_REJECTED);
+            }
         throw new ApiException("Not enough authorities", UNAUTHORIZED, HttpStatus.UNAUTHORIZED);
     }
 

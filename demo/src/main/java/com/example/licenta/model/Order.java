@@ -2,6 +2,8 @@ package com.example.licenta.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -30,6 +32,7 @@ public class Order {
     private Restaurant restaurant;
 
     @Column(name = "status")
+    @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
     @Column(name = "total_price")

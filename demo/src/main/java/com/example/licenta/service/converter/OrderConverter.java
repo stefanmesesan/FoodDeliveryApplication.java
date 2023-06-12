@@ -11,6 +11,7 @@ public class OrderConverter {
         orderDTO.setId(order.getId());
         orderDTO.setRestaurant(order.getRestaurant());
         orderDTO.setTotalPrice(order.getTotalPrice());
+        orderDTO.setOrderStatus(order.getOrderStatus());
 
         return orderDTO;
     }
@@ -21,6 +22,7 @@ public class OrderConverter {
         order.setId(orderDTO.getId());
         order.setRestaurant(orderDTO.getRestaurant());
         order.setTotalPrice(orderDTO.getTotalPrice());
+        order.setOrderStatus(orderDTO.getOrderStatus());
 
         return order;
     }
