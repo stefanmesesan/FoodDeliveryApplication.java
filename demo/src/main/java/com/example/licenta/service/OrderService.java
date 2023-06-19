@@ -10,6 +10,7 @@ import java.util.UUID;
 public interface OrderService {
 
     List<OrderDTO> findAll();
+    List<OrderDTO> findAllByStatus(OrderStatus orderStatus);
 
     OrderDTO addOrder(OrderDTO orderDTO);
 
@@ -20,4 +21,5 @@ public interface OrderService {
     OrderDTO findById(UUID id);
 
     void deleteOrder(UUID id);
+
 }

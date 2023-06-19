@@ -6,6 +6,7 @@ import com.example.licenta.model.dto.ReviewDTO;
 import com.example.licenta.security.Secured;
 import com.example.licenta.service.RestaurantService;
 import com.example.licenta.service.ReviewService;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,6 +44,13 @@ public class RestaurantController {
     @Secured(role = {UserRole.CUSTOMER, UserRole.ADMIN})
     public RestaurantDTO getRestaurant(@PathVariable UUID id) {
         return restaurantService.findById(id);
+    }
+
+    @PostMapping("/deleteRequest")
+    @Secured(role = {UserRole.RESTAURANT_OPERATOR})
+    public void sendDeleteRestaurantRequest() {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getCredentials().toString();
+        restaurantService.sendDeleteRequest(userEmail);
     }
 
     @DeleteMapping("/{id}")

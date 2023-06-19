@@ -4,7 +4,7 @@ import com.example.licenta.model.UserRole;
 import com.example.licenta.security.AuthenticationRequest;
 import com.example.licenta.security.AuthenticationResponse;
 import com.example.licenta.security.RegisterRequest;
-import com.example.licenta.service.impl.AuthenticationServiceImpl;
+import com.example.licenta.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -16,11 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/auth")
 @RequiredArgsConstructor
+@RequestMapping("/auth")
 public class AuthenticationController {
 
-    private final AuthenticationServiceImpl service;
+    private final AuthenticationService service;
 
     @PostMapping("/register/{userRole}")
     public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request,

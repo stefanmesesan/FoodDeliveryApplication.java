@@ -1,14 +1,17 @@
 package com.example.licenta.controller;
 
+import com.example.licenta.model.OrderStatus;
 import com.example.licenta.model.UserRole;
 import com.example.licenta.model.dto.OrderDTO;
 import com.example.licenta.model.dto.UserDTO;
+import com.example.licenta.security.Secured;
 import com.example.licenta.service.OrderService;
 import com.example.licenta.service.RestaurantService;
 import com.example.licenta.service.UserService;
 import com.example.licenta.utils.UserRoleMapper;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,12 +43,20 @@ public class OrderController {
         return orderService.findAll();
     }
 
+    @GetMapping("/admin/orders")
+    public List<OrderDTO> getCancelledOrders() {
+        return orderService.findAllByStatus(OrderStatus.ORDER_CANCELED);
+    }
+
     @GetMapping("/myOrders")
-    public List<OrderDTO> getMyOrders() {
+    @Secured(role = {UserRole.CUSTOMER, UserRole.RESTAURANT_OPERATOR})
+    public List<OrderDTO> getMyRestaurantOrders() {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getCredentials().toString();
         UserDTO userDTO = userService.findByUserEmail(userEmail);
 
-        return restaurantService.findMyRestaurantsOrders(userDTO.getId());
+        if (userDTO.getRole().equals(UserRole.RESTAURANT_OPERATOR))
+            return restaurantService.findMyRestaurantOrders(userDTO.getId());
+        else return restaurantService.findMyOrders(userDTO.getId());
     }
 
     @GetMapping("/{id}")
@@ -57,7 +68,6 @@ public class OrderController {
     public OrderDTO changeOrderStatus(@PathVariable(value = "id") UUID id) {
         Collection<? extends GrantedAuthority> userRole = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
         UserRole userRoleMapped = UserRoleMapper.convert(userRole);
-
         return orderService.changeOrderStatus(id, userRoleMapped);
     }
 
@@ -70,5 +80,11 @@ public class OrderController {
     public OrderDTO modifyOrderDetails(@PathVariable(value = "id") UUID id,
                                        @RequestBody OrderDTO orderDTO) {
         return orderService.modifyOrderDetails(id, orderDTO);
+    }
+
+    @DeleteMapping("/orders/{id}")
+    @Secured(role = {UserRole.ADMIN})
+    public void deleteOrder(@PathVariable UUID id) {
+        orderService.deleteOrder(id);
     }
 }

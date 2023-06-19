@@ -12,5 +12,7 @@ public interface RestaurantService {
     void deleteRestaurant(UUID id);
     RestaurantDTO modifyRestaurantDetails(UUID id, RestaurantDTO newRestaurantDTO);
     RestaurantDTO findById(UUID id);
-    List<OrderDTO> findMyRestaurantsOrders(UUID userId);
+    List<OrderDTO> findMyRestaurantOrders(UUID userId);
+    List<OrderDTO> findMyOrders(UUID id);
+    void sendDeleteRequest(String name);
 }

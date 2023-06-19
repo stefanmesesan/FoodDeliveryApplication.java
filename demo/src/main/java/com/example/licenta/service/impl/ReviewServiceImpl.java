@@ -5,7 +5,6 @@ import com.example.licenta.exception.ErrorKeys;
 import com.example.licenta.model.Restaurant;
 import com.example.licenta.model.Review;
 import com.example.licenta.model.User;
-import com.example.licenta.model.dto.RestaurantDTO;
 import com.example.licenta.model.dto.ReviewDTO;
 import com.example.licenta.repository.RestaurantRepository;
 import com.example.licenta.repository.ReviewRepository;
@@ -41,13 +40,13 @@ public class ReviewServiceImpl implements ReviewService {
         return ReviewConverter.toReviewDTO(reviewRepository.save(review));
     }
 
-    private RestaurantDTO placeRating(UUID restaurantId, Double rating) {
+    private void placeRating(UUID restaurantId, Double rating) {
         if (rating < 1 || rating > 10)
             throw new ApiException("rating should be between 1 and 10", ErrorKeys.INVALID_RATING, HttpStatus.BAD_REQUEST);
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() -> new ApiException("Restaurant NOT found!", ErrorKeys.NOT_FOUND, HttpStatus.NOT_FOUND));
 
         restaurant.setRating((restaurant.getRating() + rating) / 2);
 
-        return RestaurantConverter.toRestaurantDTO(restaurantRepository.save(restaurant));
+        RestaurantConverter.toRestaurantDTO(restaurantRepository.save(restaurant));
     }
 }

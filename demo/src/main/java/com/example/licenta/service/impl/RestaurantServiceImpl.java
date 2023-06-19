@@ -1,6 +1,8 @@
 package com.example.licenta.service.impl;
 
 import com.example.licenta.exception.ApiException;
+import com.example.licenta.model.EmailDetails;
+import com.example.licenta.model.Order;
 import com.example.licenta.model.Restaurant;
 import com.example.licenta.model.User;
 import com.example.licenta.model.dto.OrderDTO;
@@ -8,7 +10,9 @@ import com.example.licenta.model.dto.RestaurantDTO;
 import com.example.licenta.repository.OrderRepository;
 import com.example.licenta.repository.RestaurantRepository;
 import com.example.licenta.repository.UserRepository;
+import com.example.licenta.service.EmailService;
 import com.example.licenta.service.RestaurantService;
+import com.example.licenta.service.converter.OrderConverter;
 import com.example.licenta.service.converter.RestaurantConverter;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -26,11 +30,13 @@ public class RestaurantServiceImpl implements RestaurantService {
     private final RestaurantRepository restaurantRepository;
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
+    private final EmailService emailService;
 
-    public RestaurantServiceImpl(RestaurantRepository restaurantRepository, OrderRepository orderRepository, UserRepository userRepository) {
+    public RestaurantServiceImpl(RestaurantRepository restaurantRepository, OrderRepository orderRepository, UserRepository userRepository, EmailService emailService) {
         this.restaurantRepository = restaurantRepository;
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
+        this.emailService = emailService;
     }
 
     public List<RestaurantDTO> findAllBySpecifications(Double rating) {
@@ -43,12 +49,27 @@ public class RestaurantServiceImpl implements RestaurantService {
         return RestaurantConverter.toRestaurantDTO(restaurant);
     }
 
-    public List<OrderDTO> findMyRestaurantsOrders(UUID userId){
-
+    public List<OrderDTO> findMyRestaurantOrders(UUID userId){
         User user = userRepository.findById(userId).orElseThrow(() -> new ApiException("User not found", NOT_FOUND, HttpStatus.NOT_FOUND));
         Restaurant restaurant = restaurantRepository.findByAddedBy(user);
+        return orderRepository.findAllByRestaurantId(restaurant.getId()).stream().map(OrderConverter::toOrderDTO).toList();
+    }
 
-        return orderRepository.findAllByRestaurantId(restaurant.getId());
+    public List<OrderDTO> findMyOrders(UUID userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new ApiException("User not found", NOT_FOUND, HttpStatus.NOT_FOUND));
+        return orderRepository.findAllByUserId(userId).stream().map(OrderConverter::toOrderDTO).toList();
+
+    }
+
+    public void sendDeleteRequest(String userEmail) {
+        User user = userRepository.findUserByEmail(userEmail).orElseThrow(() -> new ApiException("User not found", NOT_FOUND, HttpStatus.NOT_FOUND));
+        Restaurant restaurant = restaurantRepository.findByAddedBy(user);
+
+        EmailDetails emailDetails = new EmailDetails();
+        emailDetails.setSubject("Cerere de stergere Restaurant");
+        emailDetails.setMessage("Buna ziua! Doresc stergerea restaurantului meu din aplicatia FUUD|EP.\nNumele restaurantului meu este " + restaurant.getName() + ". \nVa multumesc!");
+
+        emailService.sendSimpleMail(emailDetails);
     }
 
     public RestaurantDTO addRestaurant(RestaurantDTO restaurantDTO) {
