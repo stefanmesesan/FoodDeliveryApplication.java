@@ -59,7 +59,8 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     public List<OrderDTO> findMyOrders(UUID userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new ApiException("User not found", NOT_FOUND, HttpStatus.NOT_FOUND));
+        if (userRepository.findById(userId).isEmpty())
+            throw new ApiException("User not found", NOT_FOUND, HttpStatus.NOT_FOUND);
         return orderRepository.findAllByUserId(userId).stream().map(OrderConverter::toOrderDTO).toList();
 
     }

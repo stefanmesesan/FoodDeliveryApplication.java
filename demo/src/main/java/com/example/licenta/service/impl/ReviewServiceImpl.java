@@ -20,9 +20,9 @@ import java.util.UUID;
 @Service
 public class ReviewServiceImpl implements ReviewService {
 
-    RestaurantRepository restaurantRepository;
-    ReviewRepository reviewRepository;
-    UserRepository userRepository;
+    final RestaurantRepository restaurantRepository;
+    final ReviewRepository reviewRepository;
+    final UserRepository userRepository;
 
     public ReviewServiceImpl(RestaurantRepository restaurantRepository, ReviewRepository reviewRepository, UserRepository userRepository) {
         this.restaurantRepository = restaurantRepository;
