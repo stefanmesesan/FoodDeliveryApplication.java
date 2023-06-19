@@ -15,6 +15,8 @@ public class RestaurantDTO {
 
     private Double rating;
 
+    private Boolean needDeletion;
+
     public UUID getId() {
         return id;
     }
@@ -55,16 +57,24 @@ public class RestaurantDTO {
         this.rating = rating;
     }
 
+    public Boolean getNeedDeletion() {
+        return needDeletion;
+    }
+
+    public void setNeedDeletion(Boolean needDeletion) {
+        this.needDeletion = needDeletion;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RestaurantDTO that = (RestaurantDTO) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(address, that.address) && Objects.equals(phoneNumber, that.phoneNumber) && Objects.equals(rating, that.rating);
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(address, that.address) && Objects.equals(phoneNumber, that.phoneNumber) && Objects.equals(rating, that.rating) && Objects.equals(needDeletion, that.needDeletion);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, address, phoneNumber, rating);
+        return Objects.hash(id, name, address, phoneNumber, rating, needDeletion);
     }
 }

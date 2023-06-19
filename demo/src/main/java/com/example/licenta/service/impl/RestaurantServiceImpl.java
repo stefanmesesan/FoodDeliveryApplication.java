@@ -2,7 +2,6 @@ package com.example.licenta.service.impl;
 
 import com.example.licenta.exception.ApiException;
 import com.example.licenta.model.EmailDetails;
-import com.example.licenta.model.Order;
 import com.example.licenta.model.Restaurant;
 import com.example.licenta.model.User;
 import com.example.licenta.model.dto.OrderDTO;
@@ -39,6 +38,10 @@ public class RestaurantServiceImpl implements RestaurantService {
         this.emailService = emailService;
     }
 
+    public List<RestaurantDTO> findAllNeedDeletion() {
+        return restaurantRepository.findAllByNeedDeletion(true).stream().map(RestaurantConverter::toRestaurantDTO).toList();
+    }
+
     public List<RestaurantDTO> findAllBySpecifications(Double rating) {
         Specification<Restaurant> specification = getRestaurantSpecification(rating);
         return restaurantRepository.findAll(specification).stream().map(RestaurantConverter::toRestaurantDTO).toList();
@@ -64,6 +67,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     public void sendDeleteRequest(String userEmail) {
         User user = userRepository.findUserByEmail(userEmail).orElseThrow(() -> new ApiException("User not found", NOT_FOUND, HttpStatus.NOT_FOUND));
         Restaurant restaurant = restaurantRepository.findByAddedBy(user);
+        restaurant.setNeedDeletion(true);
 
         EmailDetails emailDetails = new EmailDetails();
         emailDetails.setSubject("Cerere de stergere Restaurant");
@@ -72,9 +76,13 @@ public class RestaurantServiceImpl implements RestaurantService {
         emailService.sendSimpleMail(emailDetails);
     }
 
-    public RestaurantDTO addRestaurant(RestaurantDTO restaurantDTO) {
+    public RestaurantDTO addRestaurant(RestaurantDTO restaurantDTO, String userEmail) {
+        User user = userRepository.findUserByEmail(userEmail).orElseThrow();
+
         Restaurant restaurant = RestaurantConverter.toRestaurant(restaurantDTO);
         restaurant.setRating(0.0);
+        restaurant.setNeedDeletion(false);
+        restaurant.setAddedBy(user);
         return RestaurantConverter.toRestaurantDTO(restaurantRepository.save(restaurant));
     }
 

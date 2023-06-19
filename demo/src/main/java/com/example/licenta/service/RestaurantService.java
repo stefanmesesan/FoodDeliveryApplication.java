@@ -8,11 +8,12 @@ import java.util.UUID;
 
 public interface RestaurantService {
     List<RestaurantDTO> findAllBySpecifications(Double rating);
-    RestaurantDTO addRestaurant(RestaurantDTO restaurantDTO);
+    RestaurantDTO addRestaurant(RestaurantDTO restaurantDTO, String userEmail);
     void deleteRestaurant(UUID id);
     RestaurantDTO modifyRestaurantDetails(UUID id, RestaurantDTO newRestaurantDTO);
     RestaurantDTO findById(UUID id);
     List<OrderDTO> findMyRestaurantOrders(UUID userId);
     List<OrderDTO> findMyOrders(UUID id);
     void sendDeleteRequest(String name);
+    List<RestaurantDTO> findAllNeedDeletion();
 }

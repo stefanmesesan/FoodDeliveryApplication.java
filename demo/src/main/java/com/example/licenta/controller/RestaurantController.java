@@ -34,6 +34,12 @@ public class RestaurantController {
         this.reviewService = reviewService;
     }
 
+    @GetMapping("/admin")
+    @Secured(role = {UserRole.ADMIN})
+    public List<RestaurantDTO> getAllRestaurants() {
+        return restaurantService.findAllNeedDeletion();
+    }
+
     @GetMapping
     @Secured(role = {UserRole.CUSTOMER})
     public List<RestaurantDTO> getRestaurants(@RequestParam(name = "rating", required = false) Double rating) {
@@ -62,7 +68,8 @@ public class RestaurantController {
     @PostMapping
     @Secured(role = {UserRole.RESTAURANT_OPERATOR})
     public RestaurantDTO addRestaurant(@RequestBody RestaurantDTO restaurantDTO) {
-        return restaurantService.addRestaurant(restaurantDTO);
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getCredentials().toString();
+        return restaurantService.addRestaurant(restaurantDTO, userEmail);
     }
 
     @PutMapping("/{id}")
