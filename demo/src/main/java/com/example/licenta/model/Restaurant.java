@@ -4,8 +4,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -33,11 +31,10 @@ public class Restaurant {
     @Column(name = "rating")
     private Double rating;
 
-    @OneToOne
-    @JoinColumn(name = "id", referencedColumnName = "id", nullable = false)
-    private User addedBy;
+    @Column(name = "addedby")
+    private UUID addedBy;
 
-    @Column(name = "needDeletion")
+    @Column(name = "needdeletion")
     private Boolean needDeletion;
 
     public UUID getId() {
@@ -80,11 +77,11 @@ public class Restaurant {
         this.rating = rating;
     }
 
-    public User getAddedBy() {
+    public UUID getAddedBy() {
         return addedBy;
     }
 
-    public void setAddedBy(User addedBy) {
+    public void setAddedBy(UUID addedBy) {
         this.addedBy = addedBy;
     }
 

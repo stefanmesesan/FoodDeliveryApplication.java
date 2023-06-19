@@ -32,7 +32,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     public ReviewDTO placeReview(ReviewDTO reviewDTO, UUID userId, UUID restaurantId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new ApiException("User not found!", ErrorKeys.USER_NOT_FOUND, HttpStatus.NOT_FOUND));
-        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() -> new ApiException("Restaurant not found!" ,ErrorKeys.NOT_FOUND, HttpStatus.NOT_FOUND));
+        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() -> new ApiException("Restaurant not found!", ErrorKeys.NOT_FOUND, HttpStatus.NOT_FOUND));
 
         placeRating(restaurantId, reviewDTO.getRating());
 

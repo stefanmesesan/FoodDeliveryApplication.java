@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.example.licenta.exception.ErrorKeys.NOT_FOUND;
+import static com.example.licenta.repository.FilterSpecifications.byName;
 import static com.example.licenta.repository.FilterSpecifications.byRating;
 
 @Service
@@ -42,8 +43,13 @@ public class RestaurantServiceImpl implements RestaurantService {
         return restaurantRepository.findAllByNeedDeletion(true).stream().map(RestaurantConverter::toRestaurantDTO).toList();
     }
 
+    public List<RestaurantDTO> findByName(String name) {
+        Specification<Restaurant> specification = getRestaurantSpecification(null, name);
+        return restaurantRepository.findAll(specification).stream().map(RestaurantConverter::toRestaurantDTO).toList();
+    }
+
     public List<RestaurantDTO> findAllBySpecifications(Double rating) {
-        Specification<Restaurant> specification = getRestaurantSpecification(rating);
+        Specification<Restaurant> specification = getRestaurantSpecification(rating, null);
         return restaurantRepository.findAll(specification).stream().map(RestaurantConverter::toRestaurantDTO).toList();
     }
 
@@ -52,7 +58,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         return RestaurantConverter.toRestaurantDTO(restaurant);
     }
 
-    public List<OrderDTO> findMyRestaurantOrders(UUID userId){
+    public List<OrderDTO> findMyRestaurantOrders(UUID userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new ApiException("User not found", NOT_FOUND, HttpStatus.NOT_FOUND));
         Restaurant restaurant = restaurantRepository.findByAddedBy(user);
         return orderRepository.findAllByRestaurantId(restaurant.getId()).stream().map(OrderConverter::toOrderDTO).toList();
@@ -77,13 +83,15 @@ public class RestaurantServiceImpl implements RestaurantService {
         emailService.sendSimpleMail(emailDetails);
     }
 
-    public RestaurantDTO addRestaurant(RestaurantDTO restaurantDTO, String userEmail) {
-        User user = userRepository.findUserByEmail(userEmail).orElseThrow();
+    public RestaurantDTO addRestaurant(RestaurantDTO restaurantDTO, String email) {
+        User user = userRepository.findUserByEmail(email).orElseThrow(() -> new ApiException("User not found", NOT_FOUND, HttpStatus.NOT_FOUND));
 
-        Restaurant restaurant = RestaurantConverter.toRestaurant(restaurantDTO);
+        Restaurant restaurant = RestaurantConverter.toRestaurant(restaurantDTO, user.getId());
+
         restaurant.setRating(0.0);
         restaurant.setNeedDeletion(false);
-        restaurant.setAddedBy(user);
+        restaurant.setAddedBy(user.getId());
+
         return RestaurantConverter.toRestaurantDTO(restaurantRepository.save(restaurant));
     }
 
@@ -98,14 +106,16 @@ public class RestaurantServiceImpl implements RestaurantService {
         restaurant.setAddress(newRestaurantDTO.getAddress());
         restaurant.setPhoneNumber(newRestaurantDTO.getPhoneNumber());
 
-        return RestaurantConverter.toRestaurantDTO(restaurantRepository.save(restaurant));
+        return RestaurantConverter.toRestaurantDTOandId(restaurantRepository.save(restaurant), restaurant.getAddedBy());
     }
 
-    private Specification<Restaurant> getRestaurantSpecification(Double rating) {
+    private Specification<Restaurant> getRestaurantSpecification(Double rating, String name) {
         Specification<Restaurant> specification = Specification.where(null);
 
         if (rating != null)
             specification = byRating(rating).and(specification);
+        if (name != null)
+            specification = byName(name).and(specification);
 
         return specification;
     }
