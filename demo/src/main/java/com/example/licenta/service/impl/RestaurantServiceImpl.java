@@ -82,6 +82,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         emailDetails.setRecipient("stefan.mesesan12@gmail.com");
 
         emailService.sendSimpleMail(emailDetails);
+        RestaurantConverter.toRestaurantDTO(restaurantRepository.save(restaurant));
     }
 
     public RestaurantDTO addRestaurant(RestaurantDTO restaurantDTO, String email) {
