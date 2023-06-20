@@ -9,9 +9,10 @@ public class OrderConverter {
         final OrderDTO orderDTO = new OrderDTO();
         orderDTO.setOrderStatus(order.getOrderStatus());
         orderDTO.setId(order.getId());
-        orderDTO.setRestaurant(order.getRestaurant());
+        orderDTO.setRestaurantId(order.getRestaurantId());
         orderDTO.setTotalPrice(order.getTotalPrice());
         orderDTO.setOrderStatus(order.getOrderStatus());
+        orderDTO.setUserId(order.getUserId());
 
         return orderDTO;
     }
@@ -20,9 +21,10 @@ public class OrderConverter {
         final Order order = new Order();
         order.setOrderStatus(orderDTO.getOrderStatus());
         order.setId(orderDTO.getId());
-        order.setRestaurant(orderDTO.getRestaurant());
+        order.setRestaurantId(orderDTO.getRestaurantId());
         order.setTotalPrice(orderDTO.getTotalPrice());
         order.setOrderStatus(orderDTO.getOrderStatus());
+        order.setUserId(orderDTO.getUserId());
 
         return order;
     }

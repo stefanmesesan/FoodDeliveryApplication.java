@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.UUID;
 
 public interface RestaurantService {
-    List<RestaurantDTO> findAllBySpecifications(Double rating);
     RestaurantDTO addRestaurant(RestaurantDTO restaurantDTO, String email);
     void deleteRestaurant(UUID id);
     RestaurantDTO modifyRestaurantDetails(UUID id, RestaurantDTO newRestaurantDTO);
@@ -18,4 +17,6 @@ public interface RestaurantService {
     List<RestaurantDTO> findAllNeedDeletion();
 
     List<RestaurantDTO> findByName(String name);
+
+    List<RestaurantDTO> findAll();
 }

@@ -1,16 +1,30 @@
 package com.example.licenta.service.impl;
 
 import com.example.licenta.exception.ApiException;
+import com.example.licenta.exception.ErrorKeys;
+import com.example.licenta.model.MenuItem;
 import com.example.licenta.model.Order;
+import com.example.licenta.model.OrderItem;
 import com.example.licenta.model.OrderStatus;
+import com.example.licenta.model.Restaurant;
+import com.example.licenta.model.User;
 import com.example.licenta.model.UserRole;
 import com.example.licenta.model.dto.OrderDTO;
+import com.example.licenta.model.dto.OrderItemDTO;
+import com.example.licenta.repository.MenuItemRepository;
+import com.example.licenta.repository.OrderItemRepository;
 import com.example.licenta.repository.OrderRepository;
+import com.example.licenta.repository.RestaurantRepository;
+import com.example.licenta.repository.UserRepository;
 import com.example.licenta.service.OrderService;
 import com.example.licenta.service.converter.OrderConverter;
+import com.example.licenta.service.converter.OrderItemConverter;
+import com.example.licenta.utils.Constants;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.awt.*;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,9 +41,17 @@ import static com.example.licenta.utils.Constants.NOT_ENOUGH_AUTHORITIES;
 @Service
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
+    private final UserRepository userRepository;
+    private final RestaurantRepository restaurantRepository;
+    private final MenuItemRepository menuItemRepository;
+    private final OrderItemRepository orderItemRepository;
 
-    public OrderServiceImpl(OrderRepository orderRepository) {
+    public OrderServiceImpl(OrderRepository orderRepository, UserRepository userRepository, RestaurantRepository restaurantRepository, MenuItemRepository menuItemRepository, OrderItemRepository orderItemRepository) {
         this.orderRepository = orderRepository;
+        this.userRepository = userRepository;
+        this.restaurantRepository = restaurantRepository;
+        this.menuItemRepository = menuItemRepository;
+        this.orderItemRepository = orderItemRepository;
     }
 
     public List<OrderDTO> findAll() {
@@ -46,9 +68,36 @@ public class OrderServiceImpl implements OrderService {
         return OrderConverter.toOrderDTO(order);
     }
 
-    public OrderDTO addOrder(OrderDTO orderDTO) {
-        Order order = OrderConverter.toOrder(orderDTO);
+    public OrderItemDTO addToOrderItem(UUID menuItemId) {
+        if(!menuItemRepository.existsById(menuItemId))
+            throw new ApiException("blabla" , NOT_FOUND, HttpStatus.NOT_FOUND);
+
+        Order order = new Order();
+
+        OrderItem orderItem = new OrderItem();
+        orderItem.setMenuItemId(menuItemId);
+        orderItem.setQuantity(1);
+        orderItem.setOrder(order.getId());
+
+        return OrderItemConverter.toOrderItemDTO(orderItemRepository.save(orderItem));
+    }
+
+    public OrderDTO addOrder(UUID userId, UUID menuItemId) {
+        OrderItemDTO orderItemDTOCreated = addToOrderItem(menuItemId);
+
+        MenuItem menuItem = menuItemRepository.findById(orderItemDTOCreated.getMenuItem()).orElseThrow(() -> new ApiException(NOT_ENOUGH_AUTHORITIES, ErrorKeys.NOT_FOUND, HttpStatus.NOT_FOUND));
+        User user = userRepository.findById(userId).orElseThrow(() -> new ApiException(Constants.USER_NOT_FOUND, ErrorKeys.NOT_FOUND, HttpStatus.NOT_FOUND));
+        Restaurant restaurant = restaurantRepository.findById(menuItem.getRestaurantId()).orElseThrow(() -> new ApiException(NOT_ENOUGH_AUTHORITIES, ErrorKeys.NOT_FOUND, HttpStatus.NOT_FOUND));
+
+
+        Order order = new Order();
         order.setOrderStatus(NEW);
+        order.setCreatedAt(LocalDate.now());
+        order.setUserId(user.getId());
+        order.setRestaurantId(restaurant.getId());
+        order.setTotalPrice(orderItemDTOCreated.getQuantity() * menuItem.getPrice().doubleValue());
+
+
         return OrderConverter.toOrderDTO(orderRepository.save(order));
     }
 
@@ -69,7 +118,7 @@ public class OrderServiceImpl implements OrderService {
     public OrderDTO modifyOrderDetails(UUID id, OrderDTO newOrder) {
         Order order = orderRepository.findById(id).orElseThrow();
 
-        order.setRestaurant(newOrder.getRestaurant());
+        order.setRestaurantId(newOrder.getRestaurantId());
         order.setOrderStatus(newOrder.getOrderStatus());
         order.setTotalPrice(newOrder.getTotalPrice());
 
@@ -82,5 +131,9 @@ public class OrderServiceImpl implements OrderService {
             throw new ApiException("Invalid Order Status", INVALID_STATUS, HttpStatus.BAD_REQUEST);
 
         orderRepository.deleteById(id);
+    }
+
+    private void addMenuItemToOrder(UUID menuItemId) {
+
     }
 }

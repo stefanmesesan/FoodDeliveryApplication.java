@@ -6,11 +6,10 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 
+import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -23,13 +22,11 @@ public class Order {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private UUID id;
 
-    @OneToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
-    private User user;
+    @Column(name = "user_id")
+    private UUID userId;
 
-    @OneToOne
-    @JoinColumn(name = "restaurant_id", referencedColumnName = "id", nullable = false)
-    private Restaurant restaurant;
+    @Column(name = "restaurant_id")
+    private UUID restaurantId;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
@@ -37,6 +34,9 @@ public class Order {
 
     @Column(name = "total_price")
     private Double totalPrice;
+
+    @Column(name = "created_at")
+    private LocalDate createdAt;
 
     public UUID getId() {
         return id;
@@ -46,20 +46,20 @@ public class Order {
         this.id = id;
     }
 
-    public UUID getUser() {
-        return user.getId();
+    public UUID getUserId() {
+        return userId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserId(UUID userId) {
+        this.userId = userId;
     }
 
-    public Restaurant getRestaurant() {
-        return restaurant;
+    public UUID getRestaurantId() {
+        return restaurantId;
     }
 
-    public void setRestaurant(Restaurant restaurant) {
-        this.restaurant = restaurant;
+    public void setRestaurantId(UUID restaurantId) {
+        this.restaurantId = restaurantId;
     }
 
     public OrderStatus getOrderStatus() {
@@ -78,16 +78,24 @@ public class Order {
         this.totalPrice = totalPrice;
     }
 
+    public LocalDate getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDate createdAt) {
+        this.createdAt = createdAt;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Order order = (Order) o;
-        return Objects.equals(id, order.id) && Objects.equals(user, order.user) && Objects.equals(restaurant, order.restaurant) && orderStatus == order.orderStatus && Objects.equals(totalPrice, order.totalPrice);
+        return Objects.equals(id, order.id) && Objects.equals(userId, order.userId) && Objects.equals(restaurantId, order.restaurantId) && orderStatus == order.orderStatus && Objects.equals(totalPrice, order.totalPrice) && Objects.equals(createdAt, order.createdAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, user, restaurant, orderStatus, totalPrice);
+        return Objects.hash(id, userId, restaurantId, orderStatus, totalPrice, createdAt);
     }
 }

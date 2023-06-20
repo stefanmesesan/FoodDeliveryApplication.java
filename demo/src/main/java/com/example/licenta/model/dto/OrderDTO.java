@@ -11,9 +11,9 @@ public class OrderDTO {
 
     private UUID id;
 
-    private User user;
+    private UUID userId;
 
-    private Restaurant restaurant;
+    private UUID restaurantId;
 
     private OrderStatus orderStatus;
 
@@ -27,20 +27,20 @@ public class OrderDTO {
         this.id = id;
     }
 
-    public UUID getUser() {
-        return user.getId();
+    public UUID getUserId() {
+        return userId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserId(UUID userId) {
+        this.userId = userId;
     }
 
-    public Restaurant getRestaurant() {
-        return restaurant;
+    public UUID getRestaurantId() {
+        return restaurantId;
     }
 
-    public void setRestaurant(Restaurant restaurant) {
-        this.restaurant = restaurant;
+    public void setRestaurantId(UUID restaurantId) {
+        this.restaurantId = restaurantId;
     }
 
     public OrderStatus getOrderStatus() {
@@ -64,11 +64,11 @@ public class OrderDTO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         OrderDTO orderDTO = (OrderDTO) o;
-        return Objects.equals(id, orderDTO.id) && Objects.equals(user, orderDTO.user) && Objects.equals(restaurant, orderDTO.restaurant) && orderStatus == orderDTO.orderStatus && Objects.equals(totalPrice, orderDTO.totalPrice);
+        return Objects.equals(id, orderDTO.id) && Objects.equals(userId, orderDTO.userId) && Objects.equals(restaurantId, orderDTO.restaurantId) && orderStatus == orderDTO.orderStatus && Objects.equals(totalPrice, orderDTO.totalPrice);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, user, restaurant, orderStatus, totalPrice);
+        return Objects.hash(id, userId, restaurantId, orderStatus, totalPrice);
     }
 }

@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.example.licenta.repository.FilterSpecifications.byName;
-import static com.example.licenta.repository.FilterSpecifications.byRating;
 
 @Service
 public class RestaurantServiceImpl implements RestaurantService {
@@ -45,13 +44,12 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     public List<RestaurantDTO> findByName(String name) {
-        Specification<Restaurant> specification = getRestaurantSpecification(null, name);
+        Specification<Restaurant> specification = getRestaurantSpecification( name);
         return restaurantRepository.findAll(specification).stream().map(RestaurantConverter::toRestaurantDTO).toList();
     }
 
-    public List<RestaurantDTO> findAllBySpecifications(Double rating) {
-        Specification<Restaurant> specification = getRestaurantSpecification(rating, null);
-        return restaurantRepository.findAll(specification).stream().map(RestaurantConverter::toRestaurantDTO).toList();
+    public List<RestaurantDTO> findAll() {
+        return restaurantRepository.findAll().stream().map(RestaurantConverter::toRestaurantDTO).toList();
     }
 
     public RestaurantDTO findById(UUID id) {
@@ -88,6 +86,8 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     public RestaurantDTO addRestaurant(RestaurantDTO restaurantDTO, String email) {
         User user = userRepository.findUserByEmail(email).orElseThrow(() -> new ApiException(Constants.USER_NOT_FOUND, ErrorKeys.NOT_FOUND, HttpStatus.NOT_FOUND));
+        if (restaurantRepository.existsByAddedBy(user.getId()))
+            throw new ApiException("A fost adaugat deja un restaurant folosind acest cont!", ErrorKeys.ALREADY_EXISTS, HttpStatus.BAD_REQUEST);
 
         Restaurant restaurant = RestaurantConverter.toRestaurant(restaurantDTO, user.getId());
 
@@ -112,11 +112,9 @@ public class RestaurantServiceImpl implements RestaurantService {
         return RestaurantConverter.toRestaurantDTOandId(restaurantRepository.save(restaurant), restaurant.getAddedBy());
     }
 
-    private Specification<Restaurant> getRestaurantSpecification(Double rating, String name) {
+    private Specification<Restaurant> getRestaurantSpecification(String name) {
         Specification<Restaurant> specification = Specification.where(null);
 
-        if (rating != null)
-            specification = byRating(rating).and(specification);
         if (name != null)
             specification = byName(name).and(specification);
 

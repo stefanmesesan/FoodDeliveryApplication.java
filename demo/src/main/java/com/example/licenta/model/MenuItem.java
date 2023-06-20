@@ -30,9 +30,8 @@ public class MenuItem {
     @Column(name = "price")
     private Float price;
 
-    @OneToOne
-    @JoinColumn(name = "restaurant_id", referencedColumnName = "id", nullable = false)
-    private Restaurant restaurant;
+    @Column(name = "restaurant_id")
+    private UUID restaurantId;
 
     public UUID getId() {
         return id;
@@ -66,12 +65,12 @@ public class MenuItem {
         this.price = price;
     }
 
-    public Restaurant getRestaurant() {
-        return restaurant;
+    public UUID getRestaurantId() {
+        return restaurantId;
     }
 
-    public void setRestaurant(Restaurant restaurant) {
-        this.restaurant = restaurant;
+    public void setRestaurantId(UUID restaurantId) {
+        this.restaurantId = restaurantId;
     }
 
     @Override
@@ -79,11 +78,11 @@ public class MenuItem {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MenuItem menuItem = (MenuItem) o;
-        return Objects.equals(id, menuItem.id) && Objects.equals(name, menuItem.name) && Objects.equals(description, menuItem.description) && Objects.equals(price, menuItem.price) && Objects.equals(restaurant, menuItem.restaurant);
+        return Objects.equals(id, menuItem.id) && Objects.equals(name, menuItem.name) && Objects.equals(description, menuItem.description) && Objects.equals(price, menuItem.price) && Objects.equals(restaurantId, menuItem.restaurantId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, price, restaurant);
+        return Objects.hash(id, name, description, price, restaurantId);
     }
 }

@@ -1,8 +1,5 @@
 package com.example.licenta.model.dto;
 
-import com.example.licenta.model.MenuItem;
-import com.example.licenta.model.Order;
-
 import java.util.Objects;
 import java.util.UUID;
 
@@ -10,9 +7,9 @@ public class OrderItemDTO {
 
     private UUID id;
 
-    private Order order;
+    private UUID orderId;
 
-    private MenuItem menuItem;
+    private UUID menuItemId;
 
     private int quantity;
 
@@ -24,20 +21,20 @@ public class OrderItemDTO {
         this.id = id;
     }
 
-    public Order getOrder() {
-        return order;
+    public UUID getOrder() {
+        return orderId;
     }
 
-    public void setOrder(Order order) {
-        this.order = order;
+    public void setOrder(UUID orderId) {
+        this.orderId = orderId;
     }
 
-    public MenuItem getMenuItem() {
-        return menuItem;
+    public UUID getMenuItem() {
+        return menuItemId;
     }
 
-    public void setMenuItemId(MenuItem menuItem) {
-        this.menuItem = menuItem;
+    public void setMenuItemId(UUID menuItemId) {
+        this.menuItemId = menuItemId;
     }
 
     public int getQuantity() {
@@ -53,11 +50,11 @@ public class OrderItemDTO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         OrderItemDTO that = (OrderItemDTO) o;
-        return quantity == that.quantity && Objects.equals(id, that.id) && Objects.equals(order, that.order) && Objects.equals(menuItem, that.menuItem);
+        return quantity == that.quantity && Objects.equals(id, that.id) && Objects.equals(orderId, that.orderId) && Objects.equals(menuItemId, that.menuItemId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, order, menuItem, quantity);
+        return Objects.hash(id, orderId, menuItemId, quantity);
     }
 }

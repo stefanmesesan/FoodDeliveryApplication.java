@@ -28,13 +28,11 @@ public class UserController {
     }
 
     @GetMapping
-    @Secured(role = {UserRole.ADMIN})
     public List<UserDTO> findAll() {
         return userService.findAll();
     }
 
     @DeleteMapping("/{id}")
-    @Secured(role = {UserRole.ADMIN})
     public void deleteUser(@PathVariable UUID id) {
         userService.deleteUserById(id);
     }

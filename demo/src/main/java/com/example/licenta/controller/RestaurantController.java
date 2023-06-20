@@ -41,15 +41,13 @@ public class RestaurantController {
     }
 
     @GetMapping("/admin")
-    @Secured(role = {UserRole.ADMIN})
     public List<RestaurantDTO> getAllRestaurants() {
         return restaurantService.findAllNeedDeletion();
     }
 
     @GetMapping
-    @Secured(role = {UserRole.CUSTOMER})
-    public List<RestaurantDTO> getRestaurants(@RequestParam(name = "rating", required = false) Double rating) {
-        return restaurantService.findAllBySpecifications(rating);
+    public List<RestaurantDTO> getRestaurants() {
+        return restaurantService.findAll();
     }
 
     @GetMapping("/{id}")
@@ -63,7 +61,6 @@ public class RestaurantController {
     }
 
     @DeleteMapping("/{id}")
-    @Secured(role = {UserRole.ADMIN})
     public void deleteRestaurant(@PathVariable UUID id) {
         restaurantService.deleteRestaurant(id);
     }
@@ -74,7 +71,6 @@ public class RestaurantController {
     }
 
     @PutMapping("/{id}")
-    @Secured(role = {UserRole.RESTAURANT_OPERATOR})
     public RestaurantDTO modifyRestaurant(@PathVariable(value = "id") UUID id,
                                           @RequestBody RestaurantDTO restaurantDTO) {
         return restaurantService.modifyRestaurantDetails(id, restaurantDTO);

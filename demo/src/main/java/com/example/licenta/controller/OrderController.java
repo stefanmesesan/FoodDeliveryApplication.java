@@ -5,7 +5,6 @@ import com.example.licenta.model.User;
 import com.example.licenta.model.UserRole;
 import com.example.licenta.model.dto.OrderDTO;
 import com.example.licenta.model.dto.UserDTO;
-import com.example.licenta.security.Secured;
 import com.example.licenta.service.OrderService;
 import com.example.licenta.service.RestaurantService;
 import com.example.licenta.service.UserService;
@@ -29,7 +28,7 @@ import java.util.UUID;
 
 @CrossOrigin
 @RestController
-@RequestMapping(path = "/orderController")
+@RequestMapping(path = "/orders")
 public class OrderController {
 
     private final OrderService orderService;
@@ -53,7 +52,6 @@ public class OrderController {
     }
 
     @GetMapping("/myOrders")
-    @Secured(role = {UserRole.CUSTOMER, UserRole.RESTAURANT_OPERATOR})
     public List<OrderDTO> getMyRestaurantOrders(@AuthenticationPrincipal User user) {
         UserDTO userDTO = userService.findByUserEmail(user.getEmail());
 
@@ -74,9 +72,9 @@ public class OrderController {
         return orderService.changeOrderStatus(id, userRoleMapped);
     }
 
-    @PostMapping
-    public OrderDTO addOrder(@RequestBody OrderDTO orderDTO) {
-        return orderService.addOrder(orderDTO);
+    @PostMapping("/{id}/{menuItemId}")
+    public OrderDTO addOrder(@RequestBody OrderDTO orderDTO, @PathVariable(value = "id") UUID userId, @PathVariable(value = "menuItemId") UUID menuItemId) {
+        return orderService.addOrder(userId, menuItemId);
     }
 
     @PutMapping("/{id}/details")
@@ -86,7 +84,6 @@ public class OrderController {
     }
 
     @DeleteMapping("/orders/{id}")
-    @Secured(role = {UserRole.ADMIN})
     public void deleteOrder(@PathVariable UUID id) {
         orderService.deleteOrder(id);
     }

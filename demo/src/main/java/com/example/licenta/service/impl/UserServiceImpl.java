@@ -39,11 +39,16 @@ public class UserServiceImpl implements UserService {
     public UserDTO modifyUser(UUID id, UserDTO newUser) {
         User user = userRepository.findById(id).orElseThrow();
 
-        user.setAddress(newUser.getAddress());
-        user.setPhoneNumber(newUser.getPhoneNumber());
-        user.setFirstName(newUser.getFirstName());
-        user.setLastName(newUser.getLastName());
-        user.setPassword(newUser.getPassword());
+        if (newUser.getAddress() != null)
+            user.setAddress(newUser.getAddress());
+        if (newUser.getPhoneNumber() != null)
+            user.setPhoneNumber(newUser.getPhoneNumber());
+        if (newUser.getFirstName() != null)
+            user.setFirstName(newUser.getFirstName());
+        if (newUser.getLastName() != null)
+            user.setLastName(newUser.getLastName());
+        if (newUser.getPassword() != null)
+            user.setPassword(newUser.getPassword());
 
         return UserConverter.toUserDTO(userRepository.save(user));
 

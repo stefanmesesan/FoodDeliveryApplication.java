@@ -4,9 +4,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -22,13 +19,11 @@ public class OrderItem {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private UUID id;
 
-    @ManyToOne
-    @JoinColumn(name = "order_id", referencedColumnName = "id", nullable = false)
-    private Order order;
+    @Column(name = "order_id")
+    private UUID orderId;
 
-    @OneToOne
-    @JoinColumn(name = "menu_item_id", referencedColumnName = "id", nullable = false)
-    private MenuItem menuItem;
+    @Column(name = "menu_item_id")
+    private UUID menuItemId;
 
     @Column(name = "quantity")
     private int quantity;
@@ -41,20 +36,20 @@ public class OrderItem {
         this.id = id;
     }
 
-    public Order getOrder() {
-        return order;
+    public UUID getOrder() {
+        return orderId;
     }
 
-    public void setOrder(Order order) {
-        this.order = order;
+    public void setOrder(UUID orderId) {
+        this.orderId = orderId;
     }
 
-    public MenuItem getMenuItem() {
-        return menuItem;
+    public UUID getMenuItem() {
+        return menuItemId;
     }
 
-    public void setMenuItemId(MenuItem menuItem) {
-        this.menuItem = menuItem;
+    public void setMenuItemId(UUID menuItemId) {
+        this.menuItemId = menuItemId;
     }
 
     public int getQuantity() {
@@ -70,11 +65,11 @@ public class OrderItem {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         OrderItem orderItem = (OrderItem) o;
-        return quantity == orderItem.quantity && Objects.equals(id, orderItem.id) && Objects.equals(order, orderItem.order) && Objects.equals(menuItem, orderItem.menuItem);
+        return quantity == orderItem.quantity && Objects.equals(id, orderItem.id) && Objects.equals(orderId, orderItem.orderId) && Objects.equals(menuItemId, orderItem.menuItemId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, order, menuItem, quantity);
+        return Objects.hash(id, orderId, menuItemId, quantity);
     }
 }
