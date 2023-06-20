@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.UUID;
 
+import static com.example.licenta.utils.Constants.USER_NOT_FOUND;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -31,7 +33,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public UserDTO findByUserEmail(String userEmail) {
-        return UserConverter.toUserDTO(userRepository.findUserByEmail(userEmail).orElseThrow(() -> new ApiException("User not found!", ErrorKeys.NOT_FOUND, HttpStatus.NOT_FOUND)));
+        return UserConverter.toUserDTO(userRepository.findUserByEmail(userEmail).orElseThrow(() -> new ApiException(USER_NOT_FOUND, ErrorKeys.NOT_FOUND, HttpStatus.NOT_FOUND)));
     }
 
     public UserDTO modifyUser(UUID id, UserDTO newUser) {

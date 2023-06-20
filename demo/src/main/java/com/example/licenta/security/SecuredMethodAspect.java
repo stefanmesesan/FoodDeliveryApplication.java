@@ -14,6 +14,8 @@ import org.springframework.stereotype.Component;
 import java.util.Arrays;
 import java.util.Collection;
 
+import static com.example.licenta.utils.Constants.NOT_ENOUGH_AUTHORITIES;
+
 @Aspect
 @Component
 public class SecuredMethodAspect {
@@ -33,6 +35,6 @@ public class SecuredMethodAspect {
                         .replace("]", "")))
 
             return pjp.proceed();
-        else throw new ApiException("Not enough authorities!", ErrorKeys.UNAUTHORIZED, HttpStatus.UNAUTHORIZED);
+        else throw new ApiException(NOT_ENOUGH_AUTHORITIES, ErrorKeys.UNAUTHORIZED, HttpStatus.UNAUTHORIZED);
     }
 }

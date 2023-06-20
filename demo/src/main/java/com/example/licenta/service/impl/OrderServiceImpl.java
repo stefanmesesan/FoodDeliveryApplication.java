@@ -14,8 +14,15 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.UUID;
 
-import static com.example.licenta.exception.ErrorKeys.*;
-import static com.example.licenta.model.OrderStatus.*;
+import static com.example.licenta.exception.ErrorKeys.INVALID_STATUS;
+import static com.example.licenta.exception.ErrorKeys.UNAUTHORIZED;
+import static com.example.licenta.exception.ErrorKeys.NOT_FOUND;
+import static com.example.licenta.model.OrderStatus.NEW;
+import static com.example.licenta.model.OrderStatus.ON_ITS_WAY;
+import static com.example.licenta.model.OrderStatus.ORDER_RECEIVED;
+import static com.example.licenta.model.OrderStatus.ORDER_CANCELED;
+import static com.example.licenta.utils.Constants.NOT_ENOUGH_AUTHORITIES;
+
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -30,7 +37,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     public List<OrderDTO> findAllByStatus(OrderStatus orderStatus) {
-        return orderRepository.findAllByOrderStatus(ORDER_CANCELED).stream().map(OrderConverter::toOrderDTO).toList();
+        return orderRepository.findAllByOrderStatus(OrderStatus.ORDER_CANCELED).stream().map(OrderConverter::toOrderDTO).toList();
 
     }
 
@@ -56,7 +63,7 @@ public class OrderServiceImpl implements OrderService {
             } else if (userRole == UserRole.RESTAURANT_OPERATOR) {
                 order.setOrderStatus(ORDER_RECEIVED);
             }
-        throw new ApiException("Not enough authorities", UNAUTHORIZED, HttpStatus.UNAUTHORIZED);
+        throw new ApiException(NOT_ENOUGH_AUTHORITIES, UNAUTHORIZED, HttpStatus.UNAUTHORIZED);
     }
 
     public OrderDTO modifyOrderDetails(UUID id, OrderDTO newOrder) {

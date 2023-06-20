@@ -1,6 +1,7 @@
 package com.example.licenta.service.impl;
 
 import com.example.licenta.exception.ApiException;
+import com.example.licenta.exception.ErrorKeys;
 import com.example.licenta.model.EmailDetails;
 import com.example.licenta.model.Restaurant;
 import com.example.licenta.model.User;
@@ -13,6 +14,7 @@ import com.example.licenta.service.EmailService;
 import com.example.licenta.service.RestaurantService;
 import com.example.licenta.service.converter.OrderConverter;
 import com.example.licenta.service.converter.RestaurantConverter;
+import com.example.licenta.utils.Constants;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -20,7 +22,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.UUID;
 
-import static com.example.licenta.exception.ErrorKeys.NOT_FOUND;
 import static com.example.licenta.repository.FilterSpecifications.byName;
 import static com.example.licenta.repository.FilterSpecifications.byRating;
 
@@ -54,25 +55,25 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     public RestaurantDTO findById(UUID id) {
-        Restaurant restaurant = restaurantRepository.findById(id).orElseThrow(() -> new ApiException("Restaurant not found", NOT_FOUND, HttpStatus.NOT_FOUND));
+        Restaurant restaurant = restaurantRepository.findById(id).orElseThrow(() -> new ApiException("Restaurant not found", ErrorKeys.NOT_FOUND, HttpStatus.NOT_FOUND));
         return RestaurantConverter.toRestaurantDTO(restaurant);
     }
 
     public List<OrderDTO> findMyRestaurantOrders(UUID userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new ApiException("User not found", NOT_FOUND, HttpStatus.NOT_FOUND));
+        User user = userRepository.findById(userId).orElseThrow(() -> new ApiException(Constants.USER_NOT_FOUND, ErrorKeys.NOT_FOUND, HttpStatus.NOT_FOUND));
         Restaurant restaurant = restaurantRepository.findByAddedBy(user.getId());
         return orderRepository.findAllByRestaurantId(restaurant.getId()).stream().map(OrderConverter::toOrderDTO).toList();
     }
 
     public List<OrderDTO> findMyOrders(UUID userId) {
         if (userRepository.findById(userId).isEmpty())
-            throw new ApiException("User not found", NOT_FOUND, HttpStatus.NOT_FOUND);
+            throw new ApiException(Constants.USER_NOT_FOUND, ErrorKeys.NOT_FOUND, HttpStatus.NOT_FOUND);
         return orderRepository.findAllByUserId(userId).stream().map(OrderConverter::toOrderDTO).toList();
 
     }
 
     public void sendDeleteRequest(String userEmail) {
-        User user = userRepository.findUserByEmail(userEmail).orElseThrow(() -> new ApiException("User not found", NOT_FOUND, HttpStatus.NOT_FOUND));
+        User user = userRepository.findUserByEmail(userEmail).orElseThrow(() -> new ApiException(Constants.USER_NOT_FOUND, ErrorKeys.NOT_FOUND, HttpStatus.NOT_FOUND));
         Restaurant restaurant = restaurantRepository.findByAddedBy(user.getId());
         restaurant.setNeedDeletion(true);
 
@@ -86,7 +87,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     public RestaurantDTO addRestaurant(RestaurantDTO restaurantDTO, String email) {
-        User user = userRepository.findUserByEmail(email).orElseThrow(() -> new ApiException("User not found", NOT_FOUND, HttpStatus.NOT_FOUND));
+        User user = userRepository.findUserByEmail(email).orElseThrow(() -> new ApiException(Constants.USER_NOT_FOUND, ErrorKeys.NOT_FOUND, HttpStatus.NOT_FOUND));
 
         Restaurant restaurant = RestaurantConverter.toRestaurant(restaurantDTO, user.getId());
 
@@ -102,7 +103,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     public RestaurantDTO modifyRestaurantDetails(UUID id, RestaurantDTO newRestaurantDTO) {
-        Restaurant restaurant = restaurantRepository.findById(id).orElseThrow(() -> new ApiException("Restaurant not found", NOT_FOUND, HttpStatus.NOT_FOUND));
+        Restaurant restaurant = restaurantRepository.findById(id).orElseThrow(() -> new ApiException("Restaurant not found", ErrorKeys.NOT_FOUND, HttpStatus.NOT_FOUND));
 
         restaurant.setName(newRestaurantDTO.getName());
         restaurant.setAddress(newRestaurantDTO.getAddress());
