@@ -7,9 +7,7 @@ import com.example.licenta.model.dto.ReviewDTO;
 import com.example.licenta.security.Secured;
 import com.example.licenta.service.RestaurantService;
 import com.example.licenta.service.ReviewService;
-import com.example.licenta.service.UserService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,12 +29,10 @@ public class RestaurantController {
 
     private final RestaurantService restaurantService;
     private final ReviewService reviewService;
-    private final UserService userService;
 
-    public RestaurantController(RestaurantService restaurantService, ReviewService reviewService, UserService userService) {
+    public RestaurantController(RestaurantService restaurantService, ReviewService reviewService) {
         this.restaurantService = restaurantService;
         this.reviewService = reviewService;
-        this.userService = userService;
     }
 
     @GetMapping("/search")

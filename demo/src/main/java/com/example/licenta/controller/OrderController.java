@@ -1,6 +1,7 @@
 package com.example.licenta.controller;
 
 import com.example.licenta.model.OrderStatus;
+import com.example.licenta.model.User;
 import com.example.licenta.model.UserRole;
 import com.example.licenta.model.dto.OrderDTO;
 import com.example.licenta.model.dto.UserDTO;
@@ -10,7 +11,9 @@ import com.example.licenta.service.RestaurantService;
 import com.example.licenta.service.UserService;
 import com.example.licenta.utils.UserRoleMapper;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +27,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
+@CrossOrigin
 @RestController
 @RequestMapping(path = "/orderController")
 public class OrderController {
@@ -50,9 +54,8 @@ public class OrderController {
 
     @GetMapping("/myOrders")
     @Secured(role = {UserRole.CUSTOMER, UserRole.RESTAURANT_OPERATOR})
-    public List<OrderDTO> getMyRestaurantOrders() {
-        String userEmail = SecurityContextHolder.getContext().getAuthentication().getCredentials().toString();
-        UserDTO userDTO = userService.findByUserEmail(userEmail);
+    public List<OrderDTO> getMyRestaurantOrders(@AuthenticationPrincipal User user) {
+        UserDTO userDTO = userService.findByUserEmail(user.getEmail());
 
         if (userDTO.getRole().equals(UserRole.RESTAURANT_OPERATOR))
             return restaurantService.findMyRestaurantOrders(userDTO.getId());
