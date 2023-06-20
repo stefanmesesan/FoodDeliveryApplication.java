@@ -10,6 +10,6 @@ import java.util.UUID;
 
 public interface RestaurantRepository extends JpaRepository<Restaurant, UUID>, JpaSpecificationExecutor<Restaurant> {
 
-    Restaurant findByAddedBy(User addedBy);
+    Restaurant findByAddedBy(UUID addedBy);
     List<Restaurant> findAllByNeedDeletion(boolean b);
 }

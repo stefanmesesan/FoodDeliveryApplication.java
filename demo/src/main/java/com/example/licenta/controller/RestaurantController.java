@@ -8,6 +8,7 @@ import com.example.licenta.security.Secured;
 import com.example.licenta.service.RestaurantService;
 import com.example.licenta.service.ReviewService;
 import com.example.licenta.service.UserService;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -40,7 +41,6 @@ public class RestaurantController {
 
     @GetMapping("/search")
     public List<RestaurantDTO> searchRestaurant(@RequestParam(name = "name", required = false) String name) {
-
         return restaurantService.findByName(name);
     }
 
@@ -62,9 +62,8 @@ public class RestaurantController {
     }
 
     @PostMapping("/deleteRequest")
-    public void sendDeleteRestaurantRequest() {
-        String userEmail = SecurityContextHolder.getContext().getAuthentication().getCredentials().toString();
-        restaurantService.sendDeleteRequest(userEmail);
+    public void sendDeleteRestaurantRequest(@AuthenticationPrincipal User user) {
+        restaurantService.sendDeleteRequest(user.getEmail());
     }
 
     @DeleteMapping("/{id}")
@@ -74,8 +73,7 @@ public class RestaurantController {
     }
 
     @PostMapping
-    public RestaurantDTO addRestaurant(@RequestBody RestaurantDTO restaurantDTO) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public RestaurantDTO addRestaurant(@RequestBody RestaurantDTO restaurantDTO, @AuthenticationPrincipal User user) {
         return restaurantService.addRestaurant(restaurantDTO, user.getEmail());
     }
 

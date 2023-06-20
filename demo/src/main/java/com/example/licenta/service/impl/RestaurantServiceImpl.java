@@ -60,7 +60,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     public List<OrderDTO> findMyRestaurantOrders(UUID userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new ApiException("User not found", NOT_FOUND, HttpStatus.NOT_FOUND));
-        Restaurant restaurant = restaurantRepository.findByAddedBy(user);
+        Restaurant restaurant = restaurantRepository.findByAddedBy(user.getId());
         return orderRepository.findAllByRestaurantId(restaurant.getId()).stream().map(OrderConverter::toOrderDTO).toList();
     }
 
@@ -73,12 +73,13 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     public void sendDeleteRequest(String userEmail) {
         User user = userRepository.findUserByEmail(userEmail).orElseThrow(() -> new ApiException("User not found", NOT_FOUND, HttpStatus.NOT_FOUND));
-        Restaurant restaurant = restaurantRepository.findByAddedBy(user);
+        Restaurant restaurant = restaurantRepository.findByAddedBy(user.getId());
         restaurant.setNeedDeletion(true);
 
         EmailDetails emailDetails = new EmailDetails();
         emailDetails.setSubject("Cerere de stergere Restaurant");
         emailDetails.setMessage("Buna ziua! Doresc stergerea restaurantului meu din aplicatia FUUD|EP.\nNumele restaurantului meu este " + restaurant.getName() + ". \nVa multumesc!");
+        emailDetails.setRecipient("stefan.mesesan12@gmail.com");
 
         emailService.sendSimpleMail(emailDetails);
     }
