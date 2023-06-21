@@ -4,7 +4,7 @@ CREATE TABLE restaurants (id UUID PRIMARY KEY, name TEXT, address TEXT, phoneNum
 
 CREATE TABLE menu_items (id UUID PRIMARY KEY, name TEXT, description TEXT, price FLOAT, spicy BOOLEAN, vegan BOOLEAN, vegetarian BOOLEAN, restaurant_id UUID REFERENCES restaurants(id));
 
-CREATE TABLE orders (id UUID PRIMARY KEY, user_id UUID REFERENCES users(id), restaurant_id UUID REFERENCES restaurants(id), status VARCHAR, total_price FLOAT, created_at TEXT);
+CREATE TABLE orders (id UUID PRIMARY KEY, user_id UUID REFERENCES users(id), restaurant_id UUID REFERENCES restaurants(id), status VARCHAR, total_price FLOAT, created_at TEXT, order_placed BOOLEAN);
 
 CREATE TABLE order_items (id UUID PRIMARY KEY, order_id UUID REFERENCES orders(id), menu_item_id UUID REFERENCES menu_items(id), quantity INT);
 

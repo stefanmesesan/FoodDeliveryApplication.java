@@ -1,55 +1,42 @@
 package com.example.licenta.service.impl;
 
 import com.example.licenta.exception.ApiException;
-import com.example.licenta.exception.ErrorKeys;
 import com.example.licenta.model.MenuItem;
 import com.example.licenta.model.Order;
 import com.example.licenta.model.OrderItem;
+import com.example.licenta.model.OrderRequestDTO;
 import com.example.licenta.model.OrderStatus;
-import com.example.licenta.model.Restaurant;
-import com.example.licenta.model.User;
 import com.example.licenta.model.UserRole;
 import com.example.licenta.model.dto.OrderDTO;
-import com.example.licenta.model.dto.OrderItemDTO;
 import com.example.licenta.repository.MenuItemRepository;
 import com.example.licenta.repository.OrderItemRepository;
 import com.example.licenta.repository.OrderRepository;
-import com.example.licenta.repository.RestaurantRepository;
-import com.example.licenta.repository.UserRepository;
 import com.example.licenta.service.OrderService;
 import com.example.licenta.service.converter.OrderConverter;
-import com.example.licenta.service.converter.OrderItemConverter;
-import com.example.licenta.utils.Constants;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.awt.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import static com.example.licenta.exception.ErrorKeys.INVALID_STATUS;
-import static com.example.licenta.exception.ErrorKeys.UNAUTHORIZED;
 import static com.example.licenta.exception.ErrorKeys.NOT_FOUND;
-import static com.example.licenta.model.OrderStatus.NEW;
+import static com.example.licenta.model.OrderStatus.DELIVERED;
 import static com.example.licenta.model.OrderStatus.ON_ITS_WAY;
-import static com.example.licenta.model.OrderStatus.ORDER_RECEIVED;
 import static com.example.licenta.model.OrderStatus.ORDER_CANCELED;
-import static com.example.licenta.utils.Constants.NOT_ENOUGH_AUTHORITIES;
+import static com.example.licenta.model.OrderStatus.ORDER_RECEIVED;
 
 
 @Service
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
-    private final UserRepository userRepository;
-    private final RestaurantRepository restaurantRepository;
     private final MenuItemRepository menuItemRepository;
     private final OrderItemRepository orderItemRepository;
 
-    public OrderServiceImpl(OrderRepository orderRepository, UserRepository userRepository, RestaurantRepository restaurantRepository, MenuItemRepository menuItemRepository, OrderItemRepository orderItemRepository) {
+    public OrderServiceImpl(OrderRepository orderRepository, MenuItemRepository menuItemRepository, OrderItemRepository orderItemRepository) {
         this.orderRepository = orderRepository;
-        this.userRepository = userRepository;
-        this.restaurantRepository = restaurantRepository;
         this.menuItemRepository = menuItemRepository;
         this.orderItemRepository = orderItemRepository;
     }
@@ -68,60 +55,16 @@ public class OrderServiceImpl implements OrderService {
         return OrderConverter.toOrderDTO(order);
     }
 
-    public OrderItemDTO addToOrderItem(UUID menuItemId) {
-        if(!menuItemRepository.existsById(menuItemId))
-            throw new ApiException("blabla" , NOT_FOUND, HttpStatus.NOT_FOUND);
-
-        Order order = new Order();
-
-        OrderItem orderItem = new OrderItem();
-        orderItem.setMenuItemId(menuItemId);
-        orderItem.setQuantity(1);
-        orderItem.setOrder(order.getId());
-
-        return OrderItemConverter.toOrderItemDTO(orderItemRepository.save(orderItem));
-    }
-
-    public OrderDTO addOrder(UUID userId, UUID menuItemId) {
-        OrderItemDTO orderItemDTOCreated = addToOrderItem(menuItemId);
-
-        MenuItem menuItem = menuItemRepository.findById(orderItemDTOCreated.getMenuItem()).orElseThrow(() -> new ApiException(NOT_ENOUGH_AUTHORITIES, ErrorKeys.NOT_FOUND, HttpStatus.NOT_FOUND));
-        User user = userRepository.findById(userId).orElseThrow(() -> new ApiException(Constants.USER_NOT_FOUND, ErrorKeys.NOT_FOUND, HttpStatus.NOT_FOUND));
-        Restaurant restaurant = restaurantRepository.findById(menuItem.getRestaurantId()).orElseThrow(() -> new ApiException(NOT_ENOUGH_AUTHORITIES, ErrorKeys.NOT_FOUND, HttpStatus.NOT_FOUND));
-
-
-        Order order = new Order();
-        order.setOrderStatus(NEW);
-        order.setCreatedAt(LocalDate.now());
-        order.setUserId(user.getId());
-        order.setRestaurantId(restaurant.getId());
-        order.setTotalPrice(orderItemDTOCreated.getQuantity() * menuItem.getPrice().doubleValue());
-
-
-        return OrderConverter.toOrderDTO(orderRepository.save(order));
-    }
-
     public OrderDTO changeOrderStatus(UUID id, UserRole userRole) {
         Order order = orderRepository.findById(id).orElseThrow();
         if (userRole == UserRole.CUSTOMER)
             order.setOrderStatus(ORDER_CANCELED);
-        if (order.getOrderStatus() != ORDER_CANCELED)
-            if (userRole == UserRole.DELIVERY_GUY) {
-                order.setOrderStatus(ON_ITS_WAY);
-                return OrderConverter.toOrderDTO(orderRepository.save(order));
-            } else if (userRole == UserRole.RESTAURANT_OPERATOR) {
-                order.setOrderStatus(ORDER_RECEIVED);
-            }
-        throw new ApiException(NOT_ENOUGH_AUTHORITIES, UNAUTHORIZED, HttpStatus.UNAUTHORIZED);
-    }
-
-    public OrderDTO modifyOrderDetails(UUID id, OrderDTO newOrder) {
-        Order order = orderRepository.findById(id).orElseThrow();
-
-        order.setRestaurantId(newOrder.getRestaurantId());
-        order.setOrderStatus(newOrder.getOrderStatus());
-        order.setTotalPrice(newOrder.getTotalPrice());
-
+        if (userRole == UserRole.DELIVERY_GUY)
+            order.setOrderStatus(ON_ITS_WAY);
+        if (userRole == UserRole.DELIVERY_GUY && order.getOrderStatus() == ON_ITS_WAY)
+            order.setOrderStatus(DELIVERED);
+        if (userRole == UserRole.RESTAURANT_OPERATOR)
+            order.setOrderStatus(ORDER_RECEIVED);
         return OrderConverter.toOrderDTO(orderRepository.save(order));
     }
 
@@ -133,7 +76,50 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.deleteById(id);
     }
 
-    private void addMenuItemToOrder(UUID menuItemId) {
+    public OrderDTO placeNewOrder(OrderRequestDTO orderRequestDTO, UUID userId, UUID restaurantId) {
+        List<UUID> menuItemIds = orderRequestDTO.getMenuItemIds();
+        List<Integer> quantities = orderRequestDTO.getQuantities();
 
+        Order order = new Order();
+        order.setUserId(userId);
+        order.setRestaurantId(restaurantId);
+        order.setOrderStatus(OrderStatus.ORDER_RECEIVED);
+        order.setCreatedAt(LocalDate.now());
+
+        double totalPrice = calculateTotalPrice(menuItemIds, quantities);
+        order.setTotalPrice(totalPrice);
+
+        List<OrderItem> orderItems = createOrderItems(order.getId(), menuItemIds, quantities);
+        orderItemRepository.saveAll(orderItems);
+
+        return OrderConverter.toOrderDTO(orderRepository.save(order));
+    }
+
+    private double calculateTotalPrice(List<UUID> menuItemIds, List<Integer> quantities) {
+        double totalPrice = 0.0;
+        for (int i = 0; i < menuItemIds.size(); i++) {
+            UUID menuItemId = menuItemIds.get(i);
+            int quantity = quantities.get(i);
+            MenuItem menuItem = menuItemRepository.findById(menuItemId).orElse(null);
+            if (menuItem != null) {
+                double itemPrice = menuItem.getPrice();
+                totalPrice += itemPrice * quantity;
+            }
+        }
+        return totalPrice;
+    }
+
+    private List<OrderItem> createOrderItems(UUID orderId, List<UUID> menuItemIds, List<Integer> quantities) {
+        List<OrderItem> orderItems = new ArrayList<>();
+        for (int i = 0; i < menuItemIds.size(); i++) {
+            UUID menuItemId = menuItemIds.get(i);
+            int quantity = quantities.get(i);
+            OrderItem orderItem = new OrderItem();
+            orderItem.setOrderId(orderId);
+            orderItem.setMenuItemId(menuItemId);
+            orderItem.setQuantity(quantity);
+            orderItems.add(orderItem);
+        }
+        return orderItems;
     }
 }

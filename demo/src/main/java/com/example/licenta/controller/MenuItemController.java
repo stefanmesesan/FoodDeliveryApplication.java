@@ -45,7 +45,7 @@ public class MenuItemController {
     }
 
     @PutMapping("/{id}")
-    public MenuItemDTO modifyRestaurant(@PathVariable(value = "id") UUID id,
+    public MenuItemDTO modifyMenuItem(@PathVariable(value = "id") UUID id,
                                         @RequestBody MenuItemDTO menuItemDTO) {
         return menuItemService.modifyMenuItem(id, menuItemDTO);
     }

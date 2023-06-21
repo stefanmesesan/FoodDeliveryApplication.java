@@ -9,7 +9,7 @@ public class OrderItemConverter {
         final OrderItemDTO orderItemDTO = new OrderItemDTO();
         orderItemDTO.setOrder(orderItem.getOrder());
         orderItemDTO.setId(orderItem.getId());
-        orderItemDTO.setMenuItemId(orderItem.getMenuItem());
+        orderItemDTO.setMenuItemId(orderItem.getMenuItemId());
         orderItemDTO.setQuantity(orderItem.getQuantity());
 
         return orderItemDTO;

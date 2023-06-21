@@ -1,5 +1,6 @@
 package com.example.licenta.controller;
 
+import com.example.licenta.model.OrderRequestDTO;
 import com.example.licenta.model.OrderStatus;
 import com.example.licenta.model.User;
 import com.example.licenta.model.UserRole;
@@ -72,15 +73,11 @@ public class OrderController {
         return orderService.changeOrderStatus(id, userRoleMapped);
     }
 
-    @PostMapping("/{id}/{menuItemId}")
-    public OrderDTO addOrder(@RequestBody OrderDTO orderDTO, @PathVariable(value = "id") UUID userId, @PathVariable(value = "menuItemId") UUID menuItemId) {
-        return orderService.addOrder(userId, menuItemId);
-    }
-
-    @PutMapping("/{id}/details")
-    public OrderDTO modifyOrderDetails(@PathVariable(value = "id") UUID id,
-                                       @RequestBody OrderDTO orderDTO) {
-        return orderService.modifyOrderDetails(id, orderDTO);
+    @PostMapping("placeOrder/{restaurantId}")
+    public OrderDTO placeNewOrder(@RequestBody OrderRequestDTO orderRequest,
+                              @AuthenticationPrincipal User user,
+                              @PathVariable(value = "restaurantId") UUID restaurantId) {
+        return orderService.placeNewOrder(orderRequest, user.getId(), restaurantId);
     }
 
     @DeleteMapping("/orders/{id}")
