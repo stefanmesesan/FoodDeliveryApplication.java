@@ -44,10 +44,12 @@ public class MenuItemServiceImpl implements MenuItemService {
     public MenuItemDTO modifyMenuItem(UUID id, MenuItemDTO menuItemDTO) {
         MenuItem menuItem = menuItemRepository.findById(id).orElseThrow();
 
-        menuItem.setId(menuItemDTO.getId());
-        menuItem.setName(menuItemDTO.getName());
-        menuItem.setDescription(menuItemDTO.getDescription());
-        menuItem.setPrice(menuItemDTO.getPrice());
+        if (menuItemDTO.getName() != null)
+            menuItem.setName(menuItemDTO.getName());
+        if (menuItemDTO.getDescription() != null)
+            menuItem.setDescription(menuItemDTO.getDescription());
+        if (menuItemDTO.getPrice() != null)
+            menuItem.setPrice(menuItemDTO.getPrice());
 
         return MenuItemConverter.toMenuItemDTO(menuItemRepository.save(menuItem));
     }

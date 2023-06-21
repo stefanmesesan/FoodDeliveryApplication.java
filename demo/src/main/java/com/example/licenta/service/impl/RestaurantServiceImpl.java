@@ -44,7 +44,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     public List<RestaurantDTO> findByName(String name) {
-        Specification<Restaurant> specification = getRestaurantSpecification( name);
+        Specification<Restaurant> specification = getRestaurantSpecification(name);
         return restaurantRepository.findAll(specification).stream().map(RestaurantConverter::toRestaurantDTO).toList();
     }
 
@@ -105,9 +105,12 @@ public class RestaurantServiceImpl implements RestaurantService {
     public RestaurantDTO modifyRestaurantDetails(UUID id, RestaurantDTO newRestaurantDTO) {
         Restaurant restaurant = restaurantRepository.findById(id).orElseThrow(() -> new ApiException("Restaurant not found", ErrorKeys.NOT_FOUND, HttpStatus.NOT_FOUND));
 
-        restaurant.setName(newRestaurantDTO.getName());
-        restaurant.setAddress(newRestaurantDTO.getAddress());
-        restaurant.setPhoneNumber(newRestaurantDTO.getPhoneNumber());
+        if (newRestaurantDTO.getName() != null)
+            restaurant.setName(newRestaurantDTO.getName());
+        if (newRestaurantDTO.getAddress() != null)
+            restaurant.setAddress(newRestaurantDTO.getAddress());
+        if (newRestaurantDTO.getPhoneNumber() != null)
+            restaurant.setPhoneNumber(newRestaurantDTO.getPhoneNumber());
 
         return RestaurantConverter.toRestaurantDTOandId(restaurantRepository.save(restaurant), restaurant.getAddedBy());
     }
