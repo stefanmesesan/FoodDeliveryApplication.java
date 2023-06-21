@@ -47,13 +47,13 @@ public class OrderController {
         return orderService.findAll();
     }
 
-    @GetMapping("/admin/orders")
+    @GetMapping("/admin")
     public List<OrderDTO> getCancelledOrders() {
         return orderService.findAllByStatus(OrderStatus.ORDER_CANCELED);
     }
 
     @GetMapping("/myOrders")
-    public List<OrderDTO> getMyRestaurantOrders(@AuthenticationPrincipal User user) {
+    public List<OrderDTO> getMyOrders(@AuthenticationPrincipal User user) {
         UserDTO userDTO = userService.findByUserEmail(user.getEmail());
 
         if (userDTO.getRole().equals(UserRole.RESTAURANT_OPERATOR))
