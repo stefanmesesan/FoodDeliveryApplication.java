@@ -4,6 +4,7 @@ import com.example.licenta.exception.ApiException;
 import com.example.licenta.model.MenuItem;
 import com.example.licenta.model.dto.MenuItemDTO;
 import com.example.licenta.repository.MenuItemRepository;
+import com.example.licenta.repository.OrderItemRepository;
 import com.example.licenta.service.MenuItemService;
 import com.example.licenta.service.converter.MenuItemConverter;
 import org.springframework.http.HttpStatus;
@@ -27,7 +28,7 @@ public class MenuItemServiceImpl implements MenuItemService {
     }
 
     public MenuItemDTO findById(UUID id) {
-        MenuItem menuItem = menuItemRepository.findById(id).orElseThrow(() -> new ApiException("Restaurant not found", NOT_FOUND, HttpStatus.NOT_FOUND));
+        MenuItem menuItem = menuItemRepository.findById(id).orElseThrow(() -> new ApiException("Menu Item not found", NOT_FOUND, HttpStatus.NOT_FOUND));
         return MenuItemConverter.toMenuItemDTO(menuItem);
     }
 

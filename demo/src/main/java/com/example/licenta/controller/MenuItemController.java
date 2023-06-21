@@ -2,6 +2,7 @@ package com.example.licenta.controller;
 
 import com.example.licenta.model.dto.MenuItemDTO;
 import com.example.licenta.service.MenuItemService;
+import com.example.licenta.service.OrderItemService;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,27 +16,30 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(path = "/menuItemController")
+@RequestMapping(path = "/menuItems")
 public class MenuItemController {
 
     private final MenuItemService menuItemService;
+    private final OrderItemService orderItemService;
 
-    public MenuItemController(MenuItemService menuItemService) {
+    public MenuItemController(MenuItemService menuItemService, OrderItemService orderItemService) {
         this.menuItemService = menuItemService;
+        this.orderItemService = orderItemService;
     }
 
-    @GetMapping("/{restaurantId}")
-    public List<MenuItemDTO> getAllMenuItems(@PathVariable UUID restaurantId) {
+    @GetMapping("/getAll/{restaurantId}")
+    public List<MenuItemDTO> getAllMenuItems(@PathVariable(value = "restaurantId") UUID restaurantId) {
         return menuItemService.findAllByRestaurantId(restaurantId);
     }
 
-    @GetMapping("/{id}/ceva")
-    public MenuItemDTO getMenuItem(@PathVariable UUID id) {
+    @GetMapping("/{id}")
+    public MenuItemDTO getMenuItem(@PathVariable(value = "id") UUID id) {
         return menuItemService.findById(id);
     }
 
     @DeleteMapping("/{id}")
     public void deleteMenuItem(@PathVariable UUID id) {
+        orderItemService.deleteByMenuItem(id);
         menuItemService.deleteMenuItem(id);
     }
 
