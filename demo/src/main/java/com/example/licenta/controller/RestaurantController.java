@@ -55,6 +55,11 @@ public class RestaurantController {
         return restaurantService.findById(id);
     }
 
+    @GetMapping("/myRestaurant")
+    public RestaurantDTO getMyRestaurant(@AuthenticationPrincipal User user) {
+        return restaurantService.findMyRestaurant(user.getId());
+    }
+
     @PostMapping("/deleteRequest")
     public void sendDeleteRestaurantRequest(@AuthenticationPrincipal User user) {
         restaurantService.sendDeleteRequest(user.getEmail());
@@ -76,10 +81,15 @@ public class RestaurantController {
         return restaurantService.modifyRestaurantDetails(id, restaurantDTO);
     }
 
-    @PutMapping("/rating/{userId}/{restaurantId}")
-    public ReviewDTO giveRating(@PathVariable(value = "userId") UUID userId,
-                                @PathVariable(value = "restaurantId") UUID restaurantId,
-                                @RequestBody ReviewDTO reviewDTO) {
-        return reviewService.placeReview(reviewDTO, userId, restaurantId);
+    @PutMapping("/reviews/{restaurantId}")
+    public ReviewDTO placeReview(@AuthenticationPrincipal User user,
+                                 @PathVariable(value = "restaurantId") UUID restaurantId,
+                                 @RequestBody ReviewDTO reviewDTO) {
+        return reviewService.placeReview(reviewDTO, user.getId(), restaurantId);
+    }
+
+    @GetMapping("/reviews/{restaurantId}")
+    public List<ReviewDTO> getAllReviewsForRestaurant() {
+        return reviewService.findAll();
     }
 }

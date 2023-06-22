@@ -3,6 +3,7 @@ package com.example.licenta.controller;
 import com.example.licenta.model.dto.MenuItemDTO;
 import com.example.licenta.service.MenuItemService;
 import com.example.licenta.service.OrderItemService;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.UUID;
 
+@CrossOrigin
 @RestController
 @RequestMapping(path = "/menuItems")
 public class MenuItemController {

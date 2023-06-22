@@ -16,6 +16,7 @@ import com.example.licenta.utils.Constants;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -41,12 +42,16 @@ public class ReviewServiceImpl implements ReviewService {
         return ReviewConverter.toReviewDTO(reviewRepository.save(review));
     }
 
+    public List<ReviewDTO> findAll() {
+        return reviewRepository.findAll().stream().map(ReviewConverter::toReviewDTO).toList();
+    }
+
     private void placeRating(UUID restaurantId, Double rating) {
-        if (rating < 1 || rating > 10)
-            throw new ApiException("rating should be between 1 and 10", ErrorKeys.INVALID_RATING, HttpStatus.BAD_REQUEST);
+        if (rating < 1 || rating > 5)
+            throw new ApiException("rating should be between 1 and 5", ErrorKeys.INVALID_RATING, HttpStatus.BAD_REQUEST);
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() -> new ApiException("Restaurant NOT found!", ErrorKeys.NOT_FOUND, HttpStatus.NOT_FOUND));
 
-        restaurant.setRating((restaurant.getRating() + rating) / 2);
+        restaurant.setRating((restaurant.getRating() + rating) / 2.0);
 
         RestaurantConverter.toRestaurantDTO(restaurantRepository.save(restaurant));
     }

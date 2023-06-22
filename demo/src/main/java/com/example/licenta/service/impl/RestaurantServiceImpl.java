@@ -3,10 +3,15 @@ package com.example.licenta.service.impl;
 import com.example.licenta.exception.ApiException;
 import com.example.licenta.exception.ErrorKeys;
 import com.example.licenta.model.EmailDetails;
+import com.example.licenta.model.MenuItem;
+import com.example.licenta.model.Order;
+import com.example.licenta.model.OrderItem;
 import com.example.licenta.model.Restaurant;
 import com.example.licenta.model.User;
 import com.example.licenta.model.dto.OrderDTO;
 import com.example.licenta.model.dto.RestaurantDTO;
+import com.example.licenta.repository.MenuItemRepository;
+import com.example.licenta.repository.OrderItemRepository;
 import com.example.licenta.repository.OrderRepository;
 import com.example.licenta.repository.RestaurantRepository;
 import com.example.licenta.repository.UserRepository;
@@ -20,6 +25,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static com.example.licenta.repository.FilterSpecifications.byName;
@@ -31,12 +37,16 @@ public class RestaurantServiceImpl implements RestaurantService {
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final EmailService emailService;
+    private final MenuItemRepository menuItemRepository;
+    private final OrderItemRepository orderItemRepository;
 
-    public RestaurantServiceImpl(RestaurantRepository restaurantRepository, OrderRepository orderRepository, UserRepository userRepository, EmailService emailService) {
+    public RestaurantServiceImpl(RestaurantRepository restaurantRepository, OrderRepository orderRepository, UserRepository userRepository, EmailService emailService, MenuItemRepository menuItemRepository, OrderItemRepository orderItemRepository) {
         this.restaurantRepository = restaurantRepository;
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.emailService = emailService;
+        this.menuItemRepository = menuItemRepository;
+        this.orderItemRepository = orderItemRepository;
     }
 
     public List<RestaurantDTO> findAllNeedDeletion() {
@@ -55,6 +65,10 @@ public class RestaurantServiceImpl implements RestaurantService {
     public RestaurantDTO findById(UUID id) {
         Restaurant restaurant = restaurantRepository.findById(id).orElseThrow(() -> new ApiException("Restaurant not found", ErrorKeys.NOT_FOUND, HttpStatus.NOT_FOUND));
         return RestaurantConverter.toRestaurantDTO(restaurant);
+    }
+
+    public RestaurantDTO findMyRestaurant(UUID id) {
+        return RestaurantConverter.toRestaurantDTO(restaurantRepository.findByAddedBy(id));
     }
 
     public List<OrderDTO> findMyRestaurantOrders(UUID userId) {
@@ -98,9 +112,40 @@ public class RestaurantServiceImpl implements RestaurantService {
         return RestaurantConverter.toRestaurantDTO(restaurantRepository.save(restaurant));
     }
 
-    public void deleteRestaurant(UUID id) {
-        restaurantRepository.deleteById(id);
+    public void deleteRestaurant(UUID restaurantId) {
+        Optional<Restaurant> restaurantOptional = restaurantRepository.findById(restaurantId);
+        if (restaurantOptional.isPresent()) {
+            Restaurant restaurant = restaurantOptional.get();
+
+            // Obțineți lista de ordine asociate restaurantului
+            List<Order> orders = orderRepository.findAllByRestaurantId(restaurantId);
+
+            // Parcurgeți fiecare ordine și ștergeți elementele de comandă asociate
+            for (Order order : orders) {
+                List<OrderItem> orderItems = orderItemRepository.findAllByOrderId(order.getId());
+                orderItemRepository.deleteAll(orderItems);
+            }
+
+            // Ștergeți toate ordinele asociate restaurantului
+            orderRepository.deleteAll(orders);
+
+            // Ștergeți toate elementele de meniu asociate restaurantului
+            List<MenuItem> menuItems = menuItemRepository.findAllByRestaurantId(restaurantId);
+
+            // Ștergeți înregistrările din tabela "order_items" care fac referire la elementele de meniu
+            for (MenuItem menuItem : menuItems) {
+                List<OrderItem> orderItems = orderItemRepository.findAllByMenuItemId(menuItem.getId());
+                orderItemRepository.deleteAll(orderItems);
+            }
+
+            // Ștergeți toate elementele de meniu asociate restaurantului
+            menuItemRepository.deleteAll(menuItems);
+
+            // Ștergeți restaurantul
+            restaurantRepository.delete(restaurant);
+        }
     }
+
 
     public RestaurantDTO modifyRestaurantDetails(UUID id, RestaurantDTO newRestaurantDTO) {
         Restaurant restaurant = restaurantRepository.findById(id).orElseThrow(() -> new ApiException("Restaurant not found", ErrorKeys.NOT_FOUND, HttpStatus.NOT_FOUND));

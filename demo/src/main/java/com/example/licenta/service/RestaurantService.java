@@ -11,6 +11,7 @@ public interface RestaurantService {
     void deleteRestaurant(UUID id);
     RestaurantDTO modifyRestaurantDetails(UUID id, RestaurantDTO newRestaurantDTO);
     RestaurantDTO findById(UUID id);
+    RestaurantDTO findMyRestaurant(UUID id);
     List<OrderDTO> findMyRestaurantOrders(UUID userId);
     List<OrderDTO> findMyOrders(UUID id);
     void sendDeleteRequest(String email);

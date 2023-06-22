@@ -74,7 +74,7 @@ public class OrderController {
     }
 
     @PostMapping("placeOrder/{restaurantId}")
-    public OrderDTO placeNewOrder(@RequestBody OrderRequestDTO orderRequest,
+    public OrderDTO placeOrder(@RequestBody OrderRequestDTO orderRequest,
                               @AuthenticationPrincipal User user,
                               @PathVariable(value = "restaurantId") UUID restaurantId) {
         return orderService.placeNewOrder(orderRequest, user.getId(), restaurantId);
