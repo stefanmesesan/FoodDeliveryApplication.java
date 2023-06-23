@@ -21,10 +21,10 @@ public class ReviewConverter {
         final Review review = new Review();
         review.setId(reviewDTO.getId());
         review.setRating(reviewDTO.getRating());
-        review.setUser(user);
+        review.setUser_id(user.getId());
         review.setComment(reviewDTO.getComment());
-        review.setCreatedAt(reviewDTO.getCreatedAt());
-        review.setRestaurant(restaurant);
+        review.setCreatedAt();
+        review.setRestaurant_id(restaurant.getId());
 
         return review;
     }

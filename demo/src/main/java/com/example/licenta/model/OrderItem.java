@@ -7,7 +7,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 

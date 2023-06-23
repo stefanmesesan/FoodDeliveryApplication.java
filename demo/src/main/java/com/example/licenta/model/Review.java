@@ -4,8 +4,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -22,13 +20,11 @@ public class Review {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private UUID id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
-    private User user;
+    @Column(name = "user_id")
+    private UUID user_id;
 
-    @ManyToOne
-    @JoinColumn(name = "restaurant_id", referencedColumnName = "id", nullable = false)
-    private Restaurant restaurant;
+    @Column(name = "restaurant_id")
+    private UUID restaurant_id;
 
     @Column(name = "rating")
     private Double rating;
@@ -47,20 +43,20 @@ public class Review {
         this.id = id;
     }
 
-    public User getUser() {
-        return user;
+    public UUID getUser_id() {
+        return user_id;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser_id(UUID user_id) {
+        this.user_id = user_id;
     }
 
-    public Restaurant getRestaurant() {
-        return restaurant;
+    public UUID getRestaurant_id() {
+        return restaurant_id;
     }
 
-    public void setRestaurant(Restaurant restaurant) {
-        this.restaurant = restaurant;
+    public void setRestaurant_id(UUID restaurant_id) {
+        this.restaurant_id = restaurant_id;
     }
 
     public Double getRating() {
@@ -83,7 +79,7 @@ public class Review {
         return LocalDate.now();
     }
 
-    public void setCreatedAt(LocalDate createdAt) {
+    public void setCreatedAt() {
         this.createdAt = LocalDate.now();
     }
 
@@ -92,11 +88,11 @@ public class Review {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Review review = (Review) o;
-        return Objects.equals(id, review.id) && Objects.equals(user, review.user) && Objects.equals(restaurant, review.restaurant) && Objects.equals(rating, review.rating) && Objects.equals(comment, review.comment) && Objects.equals(createdAt, review.createdAt);
+        return Objects.equals(id, review.id) && Objects.equals(user_id, review.user_id) && Objects.equals(restaurant_id, review.restaurant_id) && Objects.equals(rating, review.rating) && Objects.equals(comment, review.comment) && Objects.equals(createdAt, review.createdAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, user, restaurant, rating, comment, createdAt);
+        return Objects.hash(id, user_id, restaurant_id, rating, comment, createdAt);
     }
 }
