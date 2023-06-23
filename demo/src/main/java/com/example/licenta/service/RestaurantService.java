@@ -16,8 +16,6 @@ public interface RestaurantService {
     List<OrderDTO> findMyOrders(UUID id);
     void sendDeleteRequest(String email);
     List<RestaurantDTO> findAllNeedDeletion();
-
     List<RestaurantDTO> findByName(String name);
-
     List<RestaurantDTO> findAll();
 }

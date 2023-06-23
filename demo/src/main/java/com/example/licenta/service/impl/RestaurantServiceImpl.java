@@ -49,13 +49,13 @@ public class RestaurantServiceImpl implements RestaurantService {
         this.orderItemRepository = orderItemRepository;
     }
 
-    public List<RestaurantDTO> findAllNeedDeletion() {
-        return restaurantRepository.findAllByNeedDeletion(true).stream().map(RestaurantConverter::toRestaurantDTO).toList();
-    }
-
     public List<RestaurantDTO> findByName(String name) {
         Specification<Restaurant> specification = getRestaurantSpecification(name);
         return restaurantRepository.findAll(specification).stream().map(RestaurantConverter::toRestaurantDTO).toList();
+    }
+
+    public List<RestaurantDTO> findAllNeedDeletion() {
+        return restaurantRepository.findAllByNeedDeletion(true).stream().map(RestaurantConverter::toRestaurantDTO).toList();
     }
 
     public List<RestaurantDTO> findAll() {
@@ -116,32 +116,22 @@ public class RestaurantServiceImpl implements RestaurantService {
         Optional<Restaurant> restaurantOptional = restaurantRepository.findById(restaurantId);
         if (restaurantOptional.isPresent()) {
             Restaurant restaurant = restaurantOptional.get();
-
-            // Obțineți lista de ordine asociate restaurantului
             List<Order> orders = orderRepository.findAllByRestaurantId(restaurantId);
 
-            // Parcurgeți fiecare ordine și ștergeți elementele de comandă asociate
             for (Order order : orders) {
                 List<OrderItem> orderItems = orderItemRepository.findAllByOrderId(order.getId());
                 orderItemRepository.deleteAll(orderItems);
             }
 
-            // Ștergeți toate ordinele asociate restaurantului
             orderRepository.deleteAll(orders);
-
-            // Ștergeți toate elementele de meniu asociate restaurantului
             List<MenuItem> menuItems = menuItemRepository.findAllByRestaurantId(restaurantId);
 
-            // Ștergeți înregistrările din tabela "order_items" care fac referire la elementele de meniu
             for (MenuItem menuItem : menuItems) {
                 List<OrderItem> orderItems = orderItemRepository.findAllByMenuItemId(menuItem.getId());
                 orderItemRepository.deleteAll(orderItems);
             }
 
-            // Ștergeți toate elementele de meniu asociate restaurantului
             menuItemRepository.deleteAll(menuItems);
-
-            // Ștergeți restaurantul
             restaurantRepository.delete(restaurant);
         }
     }

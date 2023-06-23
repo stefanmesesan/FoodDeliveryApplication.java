@@ -1,4 +1,4 @@
-package com.example.licenta.model;
+package com.example.licenta.model.dto;
 
 import java.util.List;
 import java.util.Objects;

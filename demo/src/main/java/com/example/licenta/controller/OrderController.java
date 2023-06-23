@@ -1,18 +1,15 @@
 package com.example.licenta.controller;
 
-import com.example.licenta.model.OrderRequestDTO;
 import com.example.licenta.model.OrderStatus;
 import com.example.licenta.model.User;
 import com.example.licenta.model.UserRole;
 import com.example.licenta.model.dto.OrderDTO;
+import com.example.licenta.model.dto.OrderRequestDTO;
 import com.example.licenta.model.dto.UserDTO;
 import com.example.licenta.service.OrderService;
 import com.example.licenta.service.RestaurantService;
 import com.example.licenta.service.UserService;
-import com.example.licenta.utils.UserRoleMapper;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -67,10 +63,9 @@ public class OrderController {
     }
 
     @PutMapping("/{id}")
-    public OrderDTO changeOrderStatus(@PathVariable(value = "id") UUID id) {
-        Collection<? extends GrantedAuthority> userRole = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
-        UserRole userRoleMapped = UserRoleMapper.convert(userRole);
-        return orderService.changeOrderStatus(id, userRoleMapped);
+    public OrderDTO changeOrderStatus(@PathVariable(value = "id") UUID id,
+                                      @AuthenticationPrincipal User user) {
+        return orderService.changeOrderStatus(id, user.getRole());
     }
 
     @PostMapping("placeOrder/{restaurantId}")

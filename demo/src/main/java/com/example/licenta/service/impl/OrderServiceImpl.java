@@ -4,7 +4,7 @@ import com.example.licenta.exception.ApiException;
 import com.example.licenta.model.MenuItem;
 import com.example.licenta.model.Order;
 import com.example.licenta.model.OrderItem;
-import com.example.licenta.model.OrderRequestDTO;
+import com.example.licenta.model.dto.OrderRequestDTO;
 import com.example.licenta.model.OrderStatus;
 import com.example.licenta.model.UserRole;
 import com.example.licenta.model.dto.OrderDTO;

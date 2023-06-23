@@ -36,6 +36,7 @@ public class RestaurantController {
     }
 
     @GetMapping("/search")
+    @Secured(role = {UserRole.CUSTOMER})
     public List<RestaurantDTO> searchRestaurant(@RequestParam(name = "name", required = false) String name) {
         return restaurantService.findByName(name);
     }
@@ -88,8 +89,8 @@ public class RestaurantController {
         return reviewService.placeReview(reviewDTO, user.getId(), restaurantId);
     }
 
-    @GetMapping("/reviews/{restaurantId}")
-    public List<ReviewDTO> getAllReviewsForRestaurant() {
+    @GetMapping("/reviews")
+    public List<ReviewDTO> getAllReviews() {
         return reviewService.findAll();
     }
 }

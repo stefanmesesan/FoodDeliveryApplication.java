@@ -11,6 +11,5 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, UUID>, J
 
     Restaurant findByAddedBy(UUID addedBy);
     List<Restaurant> findAllByNeedDeletion(boolean needDeletion);
-
     boolean existsByAddedBy(UUID id);
 }

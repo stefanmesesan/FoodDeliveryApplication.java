@@ -1,6 +1,6 @@
 package com.example.licenta.service;
 
-import com.example.licenta.model.OrderRequestDTO;
+import com.example.licenta.model.dto.OrderRequestDTO;
 import com.example.licenta.model.OrderStatus;
 import com.example.licenta.model.UserRole;
 import com.example.licenta.model.dto.OrderDTO;
