@@ -11,6 +11,7 @@ public class MenuItemConverter {
         menuItemDTO.setPrice(menuItem.getPrice());
         menuItemDTO.setName(menuItem.getName());
         menuItemDTO.setId(menuItem.getId());
+        menuItemDTO.setRestaurantId(menuItem.getRestaurantId());
 
         return menuItemDTO;
     }
@@ -22,6 +23,7 @@ public class MenuItemConverter {
         menuItem.setPrice(menuItemDTO.getPrice());
         menuItem.setId(menuItemDTO.getId());
         menuItem.setName(menuItemDTO.getName());
+        menuItem.setRestaurantId(menuItemDTO.getRestaurantId());
 
         return menuItem;
     }

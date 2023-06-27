@@ -89,8 +89,8 @@ public class RestaurantController {
         return reviewService.placeReview(reviewDTO, user.getId(), restaurantId);
     }
 
-    @GetMapping("/reviews")
-    public List<ReviewDTO> getAllReviews() {
+    @GetMapping("/reviews/{restaurantId}")
+    public List<ReviewDTO> getAllReviews(@PathVariable UUID restaurantId) {
         return reviewService.findAll();
     }
 }

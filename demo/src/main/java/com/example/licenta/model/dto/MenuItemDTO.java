@@ -12,6 +12,8 @@ public class MenuItemDTO {
 
     private Float price;
 
+    private UUID restaurantId;
+
 
     public UUID getId() {
         return id;
@@ -45,17 +47,24 @@ public class MenuItemDTO {
         this.price = price;
     }
 
+    public UUID getRestaurantId() {
+        return restaurantId;
+    }
+
+    public void setRestaurantId(UUID restaurantId) {
+        this.restaurantId = restaurantId;
+    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MenuItemDTO that = (MenuItemDTO) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(price, that.price);
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(price, that.price) && Objects.equals(restaurantId, that.restaurantId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, price);
+        return Objects.hash(id, name, description, price, restaurantId);
     }
 }

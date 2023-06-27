@@ -83,7 +83,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = new Order();
         order.setUserId(userId);
         order.setRestaurantId(restaurantId);
-        order.setOrderStatus(OrderStatus.ORDER_RECEIVED);
+        order.setOrderStatus(OrderStatus.NEW);
         order.setCreatedAt(LocalDate.now());
 
         double totalPrice = calculateTotalPrice(menuItemIds, quantities);
