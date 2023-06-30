@@ -15,7 +15,12 @@ public interface OrderService {
 
     OrderDTO placeNewOrder(OrderRequestDTO orderRequest, UUID userId, UUID restaurantId);
 
-    OrderDTO changeOrderStatus(UUID id, UserRole userRole);
+    List<OrderDTO> findAllByStatusOrderReceived();
+
+     OrderDTO cancelOrder(UUID id, UserRole userRole);
+    OrderDTO acceptOrder(UUID id, UserRole userRole);
+    OrderDTO pickUpOrder(UUID id, UserRole userRole, UUID deliveryGuyId);
+    OrderDTO deliverOrder(UUID id, UserRole userRole);
 
     OrderDTO findById(UUID id);
 

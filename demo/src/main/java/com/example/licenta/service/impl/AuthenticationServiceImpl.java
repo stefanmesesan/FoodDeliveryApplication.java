@@ -76,7 +76,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .orElseThrow();
         var access_token = jwtService.generateToken(user);
 
-        deleteAllInvalidTokens(user);
         saveUserToken(user, access_token);
 
         return AuthenticationResponse.builder()

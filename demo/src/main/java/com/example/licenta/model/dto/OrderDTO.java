@@ -20,6 +20,8 @@ public class OrderDTO {
 
     private LocalDate createdAt;
 
+    private UUID deliveryGuyId;
+
     public UUID getId() {
         return id;
     }
@@ -68,16 +70,24 @@ public class OrderDTO {
         this.createdAt = createdAt;
     }
 
+    public UUID getDeliveryGuyId() {
+        return deliveryGuyId;
+    }
+
+    public void setDeliveryGuyId(UUID deliveryGuyId) {
+        this.deliveryGuyId = deliveryGuyId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         OrderDTO orderDTO = (OrderDTO) o;
-        return Objects.equals(id, orderDTO.id) && Objects.equals(userId, orderDTO.userId) && Objects.equals(restaurantId, orderDTO.restaurantId) && orderStatus == orderDTO.orderStatus && Objects.equals(totalPrice, orderDTO.totalPrice) && Objects.equals(createdAt, orderDTO.createdAt);
+        return Objects.equals(id, orderDTO.id) && Objects.equals(userId, orderDTO.userId) && Objects.equals(restaurantId, orderDTO.restaurantId) && orderStatus == orderDTO.orderStatus && Objects.equals(totalPrice, orderDTO.totalPrice) && Objects.equals(createdAt, orderDTO.createdAt) && Objects.equals(deliveryGuyId, orderDTO.deliveryGuyId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userId, restaurantId, orderStatus, totalPrice, createdAt);
+        return Objects.hash(id, userId, restaurantId, orderStatus, totalPrice, createdAt, deliveryGuyId);
     }
 }

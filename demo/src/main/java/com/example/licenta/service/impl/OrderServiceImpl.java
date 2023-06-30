@@ -27,6 +27,7 @@ import static com.example.licenta.model.OrderStatus.DELIVERED;
 import static com.example.licenta.model.OrderStatus.ON_ITS_WAY;
 import static com.example.licenta.model.OrderStatus.ORDER_CANCELED;
 import static com.example.licenta.model.OrderStatus.ORDER_RECEIVED;
+
 @Service
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
@@ -45,7 +46,10 @@ public class OrderServiceImpl implements OrderService {
 
     public List<OrderDTO> findAllByStatus(OrderStatus orderStatus) {
         return orderRepository.findAllByOrderStatus(OrderStatus.ORDER_CANCELED).stream().map(OrderConverter::toOrderDTO).toList();
+    }
 
+    public List<OrderDTO> findAllByStatusOrderReceived() {
+        return orderRepository.findAllByOrderStatus(ORDER_RECEIVED).stream().map(OrderConverter::toOrderDTO).toList();
     }
 
     public OrderDTO findById(UUID id) {
@@ -53,18 +57,36 @@ public class OrderServiceImpl implements OrderService {
         return OrderConverter.toOrderDTO(order);
     }
 
-    public OrderDTO changeOrderStatus(UUID id, UserRole userRole) {
+    public OrderDTO cancelOrder(UUID id, UserRole userRole) {
         Order order = orderRepository.findById(id).orElseThrow();
         if (userRole == UserRole.CUSTOMER)
             order.setOrderStatus(ORDER_CANCELED);
-        if (userRole == UserRole.DELIVERY_GUY)
-            order.setOrderStatus(ON_ITS_WAY);
-        if (userRole == UserRole.DELIVERY_GUY && order.getOrderStatus() == ON_ITS_WAY)
-            order.setOrderStatus(DELIVERED);
+        return OrderConverter.toOrderDTO(orderRepository.save(order));
+    }
+
+    public OrderDTO acceptOrder(UUID id, UserRole userRole) {
+        Order order = orderRepository.findById(id).orElseThrow();
         if (userRole == UserRole.RESTAURANT_OPERATOR)
             order.setOrderStatus(ORDER_RECEIVED);
         return OrderConverter.toOrderDTO(orderRepository.save(order));
     }
+
+    public OrderDTO pickUpOrder(UUID id, UserRole userRole, UUID deliveryGuyId) {
+        Order order = orderRepository.findById(id).orElseThrow();
+        if (userRole == UserRole.DELIVERY_GUY) {
+            order.setDeliveryGuyId(deliveryGuyId);
+            order.setOrderStatus(ON_ITS_WAY);
+        }
+        return OrderConverter.toOrderDTO(orderRepository.save(order));
+    }
+
+    public OrderDTO deliverOrder(UUID id, UserRole userRole) {
+        Order order = orderRepository.findById(id).orElseThrow();
+        if (userRole == UserRole.DELIVERY_GUY)
+            order.setOrderStatus(DELIVERED);
+        return OrderConverter.toOrderDTO(orderRepository.save(order));
+    }
+
 
     public void deleteOrder(UUID id) {
         Order order = orderRepository.findById(id).orElseThrow();

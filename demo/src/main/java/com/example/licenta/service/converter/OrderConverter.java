@@ -14,6 +14,7 @@ public class OrderConverter {
         orderDTO.setOrderStatus(order.getOrderStatus());
         orderDTO.setUserId(order.getUserId());
         orderDTO.setCreatedAt(order.getCreatedAt());
+        orderDTO.setDeliveryGuyId(order.getDeliveryGuyId());
 
         return orderDTO;
     }
@@ -27,6 +28,7 @@ public class OrderConverter {
         order.setOrderStatus(orderDTO.getOrderStatus());
         order.setUserId(orderDTO.getUserId());
         order.setCreatedAt(orderDTO.getCreatedAt());
+        order.setDeliveryGuyId(orderDTO.getDeliveryGuyId());
 
         return order;
     }

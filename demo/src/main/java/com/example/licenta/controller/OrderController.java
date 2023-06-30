@@ -43,6 +43,11 @@ public class OrderController {
         return orderService.findAll();
     }
 
+    @GetMapping("/ordersToDeliver")
+    public List<OrderDTO> getOrdersReadyForDeliver() {
+        return orderService.findAllByStatusOrderReceived();
+    }
+
     @GetMapping("/admin")
     public List<OrderDTO> getCancelledOrders() {
         return orderService.findAllByStatus(OrderStatus.ORDER_CANCELED);
@@ -62,10 +67,16 @@ public class OrderController {
         return orderService.findById(id);
     }
 
-    @PutMapping("/{id}")
-    public OrderDTO changeOrderStatus(@PathVariable(value = "id") UUID id,
+    @PutMapping("/pickUpOrder/{id}")
+    public OrderDTO pickUpOrder(@PathVariable(value = "id") UUID id,
                                       @AuthenticationPrincipal User user) {
-        return orderService.changeOrderStatus(id, user.getRole());
+        return orderService.pickUpOrder(id, user.getRole(), user.getId());
+    }
+
+    @PutMapping("/deliverOrder/{id}")
+    public OrderDTO deliverOrder(@PathVariable(value = "id") UUID id,
+                                @AuthenticationPrincipal User user) {
+        return orderService.deliverOrder(id, user.getRole());
     }
 
     @PostMapping("placeOrder/{restaurantId}")

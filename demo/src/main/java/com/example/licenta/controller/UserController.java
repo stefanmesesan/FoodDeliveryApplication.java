@@ -1,7 +1,9 @@
 package com.example.licenta.controller;
 
+import com.example.licenta.model.User;
 import com.example.licenta.model.dto.UserDTO;
 import com.example.licenta.service.UserService;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,5 +40,10 @@ public class UserController {
     @PutMapping("/{id}")
     public UserDTO modifyUser(@PathVariable UUID id, @RequestBody UserDTO newUserDTO) {
         return userService.modifyUser(id, newUserDTO);
+    }
+
+    @GetMapping("/myAccount")
+    public UserDTO findOne(@AuthenticationPrincipal User user){
+        return userService.findByUserEmail(user.getEmail());
     }
 }
