@@ -67,7 +67,7 @@ public class Order {
     }
 
     public void setOrderStatus(OrderStatus orderStatus) {
-        this.orderStatus = OrderStatus.ORDER_RECEIVED;
+        this.orderStatus = orderStatus;
     }
 
     public Double getTotalPrice() {

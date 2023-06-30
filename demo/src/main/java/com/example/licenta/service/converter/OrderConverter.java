@@ -13,6 +13,7 @@ public class OrderConverter {
         orderDTO.setTotalPrice(order.getTotalPrice());
         orderDTO.setOrderStatus(order.getOrderStatus());
         orderDTO.setUserId(order.getUserId());
+        orderDTO.setCreatedAt(order.getCreatedAt());
 
         return orderDTO;
     }
@@ -25,6 +26,7 @@ public class OrderConverter {
         order.setTotalPrice(orderDTO.getTotalPrice());
         order.setOrderStatus(orderDTO.getOrderStatus());
         order.setUserId(orderDTO.getUserId());
+        order.setCreatedAt(orderDTO.getCreatedAt());
 
         return order;
     }

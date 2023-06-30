@@ -27,8 +27,6 @@ import static com.example.licenta.model.OrderStatus.DELIVERED;
 import static com.example.licenta.model.OrderStatus.ON_ITS_WAY;
 import static com.example.licenta.model.OrderStatus.ORDER_CANCELED;
 import static com.example.licenta.model.OrderStatus.ORDER_RECEIVED;
-
-
 @Service
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;

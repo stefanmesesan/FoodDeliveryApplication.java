@@ -1,9 +1,8 @@
 package com.example.licenta.model.dto;
 
 import com.example.licenta.model.OrderStatus;
-import com.example.licenta.model.Restaurant;
-import com.example.licenta.model.User;
 
+import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -18,6 +17,8 @@ public class OrderDTO {
     private OrderStatus orderStatus;
 
     private Double totalPrice;
+
+    private LocalDate createdAt;
 
     public UUID getId() {
         return id;
@@ -48,7 +49,7 @@ public class OrderDTO {
     }
 
     public void setOrderStatus(OrderStatus orderStatus) {
-        this.orderStatus = OrderStatus.ORDER_RECEIVED;
+        this.orderStatus = orderStatus;
     }
 
     public Double getTotalPrice() {
@@ -59,16 +60,24 @@ public class OrderDTO {
         this.totalPrice = totalPrice;
     }
 
+    public LocalDate getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDate createdAt) {
+        this.createdAt = createdAt;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         OrderDTO orderDTO = (OrderDTO) o;
-        return Objects.equals(id, orderDTO.id) && Objects.equals(userId, orderDTO.userId) && Objects.equals(restaurantId, orderDTO.restaurantId) && orderStatus == orderDTO.orderStatus && Objects.equals(totalPrice, orderDTO.totalPrice);
+        return Objects.equals(id, orderDTO.id) && Objects.equals(userId, orderDTO.userId) && Objects.equals(restaurantId, orderDTO.restaurantId) && orderStatus == orderDTO.orderStatus && Objects.equals(totalPrice, orderDTO.totalPrice) && Objects.equals(createdAt, orderDTO.createdAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userId, restaurantId, orderStatus, totalPrice);
+        return Objects.hash(id, userId, restaurantId, orderStatus, totalPrice, createdAt);
     }
 }
