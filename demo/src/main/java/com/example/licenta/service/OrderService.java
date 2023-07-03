@@ -25,5 +25,4 @@ public interface OrderService {
     OrderDTO findById(UUID id);
 
     void deleteOrder(UUID id);
-
 }

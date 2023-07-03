@@ -67,6 +67,18 @@ public class OrderController {
         return orderService.findById(id);
     }
 
+    @PutMapping("/acceptOrder/{id}")
+    public OrderDTO acceptOrder(@PathVariable(value = "id") UUID id,
+                                @AuthenticationPrincipal User user) {
+        return orderService.acceptOrder(id, user.getRole());
+    }
+
+    @PutMapping("/cancelOrder/{id}")
+    public OrderDTO cancelOrder(@PathVariable(value = "id") UUID id,
+                                @AuthenticationPrincipal User user) {
+        return orderService.cancelOrder(id, user.getRole());
+    }
+
     @PutMapping("/pickUpOrder/{id}")
     public OrderDTO pickUpOrder(@PathVariable(value = "id") UUID id,
                                       @AuthenticationPrincipal User user) {
