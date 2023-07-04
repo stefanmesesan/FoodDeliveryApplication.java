@@ -1,7 +1,9 @@
 package com.example.licenta.controller;
 
 import com.example.licenta.model.User;
+import com.example.licenta.model.UserRole;
 import com.example.licenta.model.dto.UserDTO;
+import com.example.licenta.security.Secured;
 import com.example.licenta.service.UserService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -28,11 +30,13 @@ public class UserController {
     }
 
     @GetMapping
+    @Secured(role = {UserRole.ADMIN})
     public List<UserDTO> findAll() {
         return userService.findAll();
     }
 
     @DeleteMapping("/{id}")
+    @Secured(role = {UserRole.ADMIN})
     public void deleteUser(@PathVariable UUID id) {
         userService.deleteUserById(id);
     }

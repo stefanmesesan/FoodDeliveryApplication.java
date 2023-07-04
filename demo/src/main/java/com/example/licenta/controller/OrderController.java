@@ -6,6 +6,7 @@ import com.example.licenta.model.UserRole;
 import com.example.licenta.model.dto.OrderDTO;
 import com.example.licenta.model.dto.OrderRequestDTO;
 import com.example.licenta.model.dto.UserDTO;
+import com.example.licenta.security.Secured;
 import com.example.licenta.service.OrderService;
 import com.example.licenta.service.RestaurantService;
 import com.example.licenta.service.UserService;
@@ -54,6 +55,7 @@ public class OrderController {
     }
 
     @GetMapping("/myOrders")
+    @Secured(role = {UserRole.RESTAURANT_OPERATOR, UserRole.CUSTOMER})
     public List<OrderDTO> getMyOrders(@AuthenticationPrincipal User user) {
         UserDTO userDTO = userService.findByUserEmail(user.getEmail());
 
@@ -68,30 +70,35 @@ public class OrderController {
     }
 
     @PutMapping("/acceptOrder/{id}")
+    @Secured(role = {UserRole.RESTAURANT_OPERATOR})
     public OrderDTO acceptOrder(@PathVariable(value = "id") UUID id,
                                 @AuthenticationPrincipal User user) {
         return orderService.acceptOrder(id, user.getRole());
     }
 
     @PutMapping("/cancelOrder/{id}")
+    @Secured(role = {UserRole.CUSTOMER})
     public OrderDTO cancelOrder(@PathVariable(value = "id") UUID id,
                                 @AuthenticationPrincipal User user) {
         return orderService.cancelOrder(id, user.getRole());
     }
 
     @PutMapping("/pickUpOrder/{id}")
+    @Secured(role = {UserRole.DELIVERY_GUY})
     public OrderDTO pickUpOrder(@PathVariable(value = "id") UUID id,
                                       @AuthenticationPrincipal User user) {
         return orderService.pickUpOrder(id, user.getRole(), user.getId());
     }
 
     @PutMapping("/deliverOrder/{id}")
+    @Secured(role = {UserRole.DELIVERY_GUY})
     public OrderDTO deliverOrder(@PathVariable(value = "id") UUID id,
                                 @AuthenticationPrincipal User user) {
         return orderService.deliverOrder(id, user.getRole());
     }
 
     @PostMapping("placeOrder/{restaurantId}")
+    @Secured(role = {UserRole.CUSTOMER})
     public OrderDTO placeOrder(@RequestBody OrderRequestDTO orderRequest,
                               @AuthenticationPrincipal User user,
                               @PathVariable(value = "restaurantId") UUID restaurantId) {

@@ -24,7 +24,7 @@ public class Review {
     private UUID user_id;
 
     @Column(name = "restaurant_id")
-    private UUID restaurant_id;
+    private UUID restaurantId;
 
     @Column(name = "rating")
     private Double rating;
@@ -51,12 +51,12 @@ public class Review {
         this.user_id = user_id;
     }
 
-    public UUID getRestaurant_id() {
-        return restaurant_id;
+    public UUID getRestaurantId() {
+        return restaurantId;
     }
 
-    public void setRestaurant_id(UUID restaurant_id) {
-        this.restaurant_id = restaurant_id;
+    public void setRestaurantId(UUID restaurant_id) {
+        this.restaurantId = restaurant_id;
     }
 
     public Double getRating() {
@@ -88,11 +88,11 @@ public class Review {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Review review = (Review) o;
-        return Objects.equals(id, review.id) && Objects.equals(user_id, review.user_id) && Objects.equals(restaurant_id, review.restaurant_id) && Objects.equals(rating, review.rating) && Objects.equals(comment, review.comment) && Objects.equals(createdAt, review.createdAt);
+        return Objects.equals(id, review.id) && Objects.equals(user_id, review.user_id) && Objects.equals(restaurantId, review.restaurantId) && Objects.equals(rating, review.rating) && Objects.equals(comment, review.comment) && Objects.equals(createdAt, review.createdAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, user_id, restaurant_id, rating, comment, createdAt);
+        return Objects.hash(id, user_id, restaurantId, rating, comment, createdAt);
     }
 }

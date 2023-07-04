@@ -42,11 +42,13 @@ public class RestaurantController {
     }
 
     @GetMapping("/admin")
-    public List<RestaurantDTO> getAllRestaurants() {
+    @Secured(role = {UserRole.ADMIN})
+    public List<RestaurantDTO> getAllRestaurantsNeededForDeletion() {
         return restaurantService.findAllNeedDeletion();
     }
 
     @GetMapping
+    @Secured(role = {UserRole.CUSTOMER})
     public List<RestaurantDTO> getRestaurants() {
         return restaurantService.findAll();
     }
@@ -57,32 +59,38 @@ public class RestaurantController {
     }
 
     @GetMapping("/myRestaurant")
+    @Secured(role = {UserRole.RESTAURANT_OPERATOR})
     public RestaurantDTO getMyRestaurant(@AuthenticationPrincipal User user) {
         return restaurantService.findMyRestaurant(user.getId());
     }
 
     @PostMapping("/deleteRequest")
+    @Secured(role = {UserRole.RESTAURANT_OPERATOR})
     public void sendDeleteRestaurantRequest(@AuthenticationPrincipal User user) {
         restaurantService.sendDeleteRequest(user.getEmail());
     }
 
     @DeleteMapping("/{id}")
+    @Secured(role = {UserRole.ADMIN})
     public void deleteRestaurant(@PathVariable UUID id) {
         restaurantService.deleteRestaurant(id);
     }
 
     @PostMapping
+    @Secured(role = {UserRole.RESTAURANT_OPERATOR})
     public RestaurantDTO addRestaurant(@RequestBody RestaurantDTO restaurantDTO, @AuthenticationPrincipal User user) {
         return restaurantService.addRestaurant(restaurantDTO, user.getEmail());
     }
 
     @PutMapping("/{id}")
+    @Secured(role = {UserRole.RESTAURANT_OPERATOR})
     public RestaurantDTO modifyRestaurant(@PathVariable(value = "id") UUID id,
                                           @RequestBody RestaurantDTO restaurantDTO) {
         return restaurantService.modifyRestaurantDetails(id, restaurantDTO);
     }
 
     @PutMapping("/reviews/{restaurantId}")
+    @Secured(role = {UserRole.CUSTOMER})
     public ReviewDTO placeReview(@AuthenticationPrincipal User user,
                                  @PathVariable(value = "restaurantId") UUID restaurantId,
                                  @RequestBody ReviewDTO reviewDTO) {
@@ -91,6 +99,6 @@ public class RestaurantController {
 
     @GetMapping("/reviews/{restaurantId}")
     public List<ReviewDTO> getAllReviews(@PathVariable UUID restaurantId) {
-        return reviewService.findAll();
+        return reviewService.findAll(restaurantId);
     }
 }

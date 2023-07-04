@@ -8,5 +8,5 @@ import java.util.UUID;
 public interface ReviewService {
     ReviewDTO placeReview(ReviewDTO reviewDTO, UUID userId, UUID restaurantId);
 
-    List<ReviewDTO> findAll();
+    List<ReviewDTO> findAll(UUID id);
 }

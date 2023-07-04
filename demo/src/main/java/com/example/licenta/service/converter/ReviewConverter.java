@@ -24,7 +24,7 @@ public class ReviewConverter {
         review.setUser_id(user.getId());
         review.setComment(reviewDTO.getComment());
         review.setCreatedAt();
-        review.setRestaurant_id(restaurant.getId());
+        review.setRestaurantId(restaurant.getId());
 
         return review;
     }

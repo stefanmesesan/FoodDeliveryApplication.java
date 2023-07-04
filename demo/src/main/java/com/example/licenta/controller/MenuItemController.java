@@ -1,6 +1,8 @@
 package com.example.licenta.controller;
 
+import com.example.licenta.model.UserRole;
 import com.example.licenta.model.dto.MenuItemDTO;
+import com.example.licenta.security.Secured;
 import com.example.licenta.service.MenuItemService;
 import com.example.licenta.service.OrderItemService;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -40,17 +42,20 @@ public class MenuItemController {
     }
 
     @DeleteMapping("/{id}")
+    @Secured(role = {UserRole.RESTAURANT_OPERATOR})
     public void deleteMenuItem(@PathVariable UUID id) {
         orderItemService.deleteByMenuItem(id);
         menuItemService.deleteMenuItem(id);
     }
 
     @PostMapping
+    @Secured(role = {UserRole.RESTAURANT_OPERATOR})
     public MenuItemDTO addMenuItem(@RequestBody MenuItemDTO menuItemDTO) {
         return menuItemService.addMenuItem(menuItemDTO);
     }
 
     @PutMapping("/{id}")
+    @Secured(role = {UserRole.RESTAURANT_OPERATOR})
     public MenuItemDTO modifyMenuItem(@PathVariable(value = "id") UUID id,
                                       @RequestBody MenuItemDTO menuItemDTO) {
         return menuItemService.modifyMenuItem(id, menuItemDTO);

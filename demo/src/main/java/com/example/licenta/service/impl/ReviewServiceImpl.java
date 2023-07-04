@@ -42,8 +42,8 @@ public class ReviewServiceImpl implements ReviewService {
         return ReviewConverter.toReviewDTO(reviewRepository.save(review));
     }
 
-    public List<ReviewDTO> findAll() {
-        return reviewRepository.findAll().stream().map(ReviewConverter::toReviewDTO).toList();
+    public List<ReviewDTO> findAll(UUID id) {
+        return reviewRepository.findAllByRestaurantId(id).stream().map(ReviewConverter::toReviewDTO).toList();
     }
 
     private void placeRating(UUID restaurantId, Double rating) {
