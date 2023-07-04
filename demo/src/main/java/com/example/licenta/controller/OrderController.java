@@ -102,7 +102,7 @@ public class OrderController {
         return orderService.deliverOrder(id, user.getRole());
     }
 
-    @PostMapping("placeOrder/{restaurantId}")
+    @PostMapping("/placeOrder/{restaurantId}")
     @Secured(role = {UserRole.CUSTOMER})
     public OrderDTO placeOrder(@RequestBody OrderRequestDTO orderRequest,
                               @AuthenticationPrincipal User user,
@@ -110,7 +110,8 @@ public class OrderController {
         return orderService.placeNewOrder(orderRequest, user.getId(), restaurantId);
     }
 
-    @DeleteMapping("/orders/{id}")
+    @DeleteMapping("/deleteOrder/{id}")
+    @Secured(role = {UserRole.ADMIN})
     public void deleteOrder(@PathVariable UUID id) {
         orderService.deleteOrder(id);
     }
