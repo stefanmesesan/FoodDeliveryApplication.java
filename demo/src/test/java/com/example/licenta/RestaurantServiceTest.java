@@ -8,6 +8,7 @@ import com.example.licenta.repository.MenuItemRepository;
 import com.example.licenta.repository.OrderItemRepository;
 import com.example.licenta.repository.OrderRepository;
 import com.example.licenta.repository.RestaurantRepository;
+import com.example.licenta.repository.ReviewRepository;
 import com.example.licenta.repository.UserRepository;
 import com.example.licenta.service.EmailService;
 import com.example.licenta.service.RestaurantService;
@@ -44,6 +45,8 @@ public class RestaurantServiceTest {
     private MenuItemRepository menuItemRepository;
     @Mock
     private OrderItemRepository orderItemRepository;
+    @Mock
+    private ReviewRepository reviewRepository;
 
     @BeforeEach
     public void initialize() {
