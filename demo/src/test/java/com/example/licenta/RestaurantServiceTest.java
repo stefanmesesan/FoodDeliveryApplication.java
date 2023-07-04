@@ -52,7 +52,7 @@ public class RestaurantServiceTest {
         restaurant = createRestaurant();
         restaurantDTO = createRestaurantDTO();
 
-        restaurantService = new RestaurantServiceImpl(restaurantRepository, orderRepository, userRepository, emailService, menuItemRepository, orderItemRepository);
+        restaurantService = new RestaurantServiceImpl(restaurantRepository, orderRepository, userRepository, emailService, menuItemRepository, orderItemRepository, reviewRepository);
     }
 
     @Test

@@ -52,6 +52,10 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.findAllByOrderStatus(ORDER_RECEIVED).stream().map(OrderConverter::toOrderDTO).toList();
     }
 
+    public List<OrderDTO> findAllByStatusOnItsWay() {
+        return orderRepository.findAllByOrderStatus(ON_ITS_WAY).stream().map(OrderConverter::toOrderDTO).toList();
+    }
+
     public OrderDTO findById(UUID id) {
         Order order = orderRepository.findById(id).orElseThrow(() -> new ApiException("Restaurant not found", NOT_FOUND, HttpStatus.NOT_FOUND));
         return OrderConverter.toOrderDTO(order);

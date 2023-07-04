@@ -7,6 +7,7 @@ import com.example.licenta.model.MenuItem;
 import com.example.licenta.model.Order;
 import com.example.licenta.model.OrderItem;
 import com.example.licenta.model.Restaurant;
+import com.example.licenta.model.Review;
 import com.example.licenta.model.User;
 import com.example.licenta.model.dto.OrderDTO;
 import com.example.licenta.model.dto.RestaurantDTO;
@@ -14,6 +15,7 @@ import com.example.licenta.repository.MenuItemRepository;
 import com.example.licenta.repository.OrderItemRepository;
 import com.example.licenta.repository.OrderRepository;
 import com.example.licenta.repository.RestaurantRepository;
+import com.example.licenta.repository.ReviewRepository;
 import com.example.licenta.repository.UserRepository;
 import com.example.licenta.service.EmailService;
 import com.example.licenta.service.RestaurantService;
@@ -39,14 +41,16 @@ public class RestaurantServiceImpl implements RestaurantService {
     private final EmailService emailService;
     private final MenuItemRepository menuItemRepository;
     private final OrderItemRepository orderItemRepository;
+    private final ReviewRepository reviewRepository;
 
-    public RestaurantServiceImpl(RestaurantRepository restaurantRepository, OrderRepository orderRepository, UserRepository userRepository, EmailService emailService, MenuItemRepository menuItemRepository, OrderItemRepository orderItemRepository) {
+    public RestaurantServiceImpl(RestaurantRepository restaurantRepository, OrderRepository orderRepository, UserRepository userRepository, EmailService emailService, MenuItemRepository menuItemRepository, OrderItemRepository orderItemRepository, ReviewRepository reviewRepository) {
         this.restaurantRepository = restaurantRepository;
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.emailService = emailService;
         this.menuItemRepository = menuItemRepository;
         this.orderItemRepository = orderItemRepository;
+        this.reviewRepository = reviewRepository;
     }
 
     public List<RestaurantDTO> findByName(String name) {
@@ -131,6 +135,9 @@ public class RestaurantServiceImpl implements RestaurantService {
                 orderItemRepository.deleteAll(orderItems);
             }
 
+            List<Review> reviewList = reviewRepository.findAllByRestaurantId(restaurantId);
+
+            reviewRepository.deleteAll(reviewList);
             menuItemRepository.deleteAll(menuItems);
             restaurantRepository.delete(restaurant);
         }

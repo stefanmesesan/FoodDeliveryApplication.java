@@ -44,9 +44,14 @@ public class OrderController {
         return orderService.findAll();
     }
 
+    @GetMapping("/ordersToPickUp")
+    public List<OrderDTO> getOrdersReadyForPickUp() {
+        return orderService.findAllByStatusOrderReceived();
+    }
+
     @GetMapping("/ordersToDeliver")
     public List<OrderDTO> getOrdersReadyForDeliver() {
-        return orderService.findAllByStatusOrderReceived();
+        return orderService.findAllByStatusOnItsWay();
     }
 
     @GetMapping("/admin")
