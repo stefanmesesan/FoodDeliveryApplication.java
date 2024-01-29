@@ -15,7 +15,7 @@ public class EmailServiceImpl implements EmailService {
         this.javaMailSender = javaMailSender;
     }
 
-    public String sendSimpleMail(EmailDetails details) {
+    public void sendSimpleMail(EmailDetails details) {
         SimpleMailMessage mailMessage
                 = new SimpleMailMessage();
 
@@ -24,6 +24,5 @@ public class EmailServiceImpl implements EmailService {
         mailMessage.setSubject(details.getSubject());
 
         javaMailSender.send(mailMessage);
-        return "Mail Sent Successfully...";
     }
 }
